@@ -1,206 +1,1119 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Engine AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#121212',
-                        darkPanel: '#1E1E1E'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MemeForge AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root[data-theme="dark"] {
+    --bg: #080810;
+    --bg2: #0d0d1a;
+    --sidebar: #0a0a16;
+    --surface: #12122a;
+    --surface2: #1a1a35;
+    --border: rgba(100,100,200,0.15);
+    --accent: #00e5c8;
+    --accent2: #a855f7;
+    --accent3: #f59e0b;
+    --text: #e8e8ff;
+    --text2: #8888bb;
+    --text3: #5555aa;
+    --user-bubble: linear-gradient(135deg,#1e1e4a,#2a1a4e);
+    --ai-bubble: #0f0f22;
+    --input-bg: #0f0f22;
+    --shadow: 0 0 40px rgba(0,229,200,0.08);
+    --glow: 0 0 20px rgba(0,229,200,0.3);
+    --modal: #0d0d20;
+    --scrollbar: #1e1e40;
+    --danger: #ff4466;
+  }
+  :root[data-theme="light"] {
+    --bg: #f0f0ff;
+    --bg2: #e8e8fa;
+    --sidebar: #e0e0f5;
+    --surface: #ffffff;
+    --surface2: #f5f5ff;
+    --border: rgba(80,80,200,0.15);
+    --accent: #0099aa;
+    --accent2: #7c3aed;
+    --accent3: #d97706;
+    --text: #1a1a3a;
+    --text2: #4a4a7a;
+    --text3: #9090c0;
+    --user-bubble: linear-gradient(135deg,#dde0ff,#e8d4ff);
+    --ai-bubble: #ffffff;
+    --input-bg: #ffffff;
+    --shadow: 0 4px 30px rgba(0,0,0,0.08);
+    --glow: 0 0 20px rgba(0,153,170,0.2);
+    --modal: #ffffff;
+    --scrollbar: #c0c0e0;
+    --danger: #dc2626;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow:hidden;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    transition:background 0.3s,color 0.3s;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar{width:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px;}
+
+  /* ====== SIDEBAR ====== */
+  #sidebar{
+    width:260px;
+    min-width:260px;
+    background:var(--sidebar);
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    position:relative;
+    z-index:10;
+  }
+  .sidebar-top{
+    padding:20px 16px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .logo-icon{
+    width:34px;height:34px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    box-shadow:var(--glow);
+  }
+  .logo-text{
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:17px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    letter-spacing:-0.3px;
+  }
+  .new-chat-btn{
+    width:100%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;
+    border-radius:12px;
+    padding:11px 16px;
+    color:#fff;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;align-items:center;gap:8px;
+    transition:all 0.2s;
+    letter-spacing:0.2px;
+  }
+  .new-chat-btn:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+  .new-chat-btn:active{transform:translateY(0);}
+
+  /* History */
+  .sidebar-section-title{
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:1.5px;
+    color:var(--text3);
+    text-transform:uppercase;
+    padding:16px 16px 8px;
+  }
+  #history-list{
+    flex:1;
+    overflow-y:auto;
+    padding:0 8px;
+  }
+  .history-item{
+    padding:10px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;align-items:center;gap:10px;
+    transition:background 0.15s;
+    margin-bottom:2px;
+    position:relative;
+    group:hover;
+  }
+  .history-item:hover{background:var(--surface);}
+  .history-item.active{background:var(--surface2);border:1px solid var(--border);}
+  .history-item .h-icon{font-size:14px;min-width:18px;}
+  .history-item .h-text{
+    font-size:13px;color:var(--text2);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    flex:1;
+  }
+  .history-item .h-del{
+    opacity:0;transition:opacity 0.15s;
+    background:none;border:none;cursor:pointer;
+    color:var(--danger);font-size:14px;padding:2px 4px;border-radius:4px;
+  }
+  .history-item:hover .h-del{opacity:1;}
+  .empty-history{
+    text-align:center;padding:30px 16px;color:var(--text3);font-size:13px;
+  }
+
+  /* Sidebar Bottom */
+  .sidebar-bottom{
+    padding:12px 8px;
+    border-top:1px solid var(--border);
+  }
+  .sidebar-btn{
+    width:100%;
+    background:none;border:none;cursor:pointer;
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:10px;
+    color:var(--text2);font-size:13px;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.15s;text-align:left;
+  }
+  .sidebar-btn:hover{background:var(--surface);color:var(--text);}
+  .sidebar-btn .sb-icon{font-size:16px;min-width:20px;}
+
+  /* ====== MAIN ====== */
+  #main{
+    flex:1;display:flex;flex-direction:column;
+    height:100vh;overflow:hidden;
+  }
+
+  /* Top Bar */
+  #topbar{
+    padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    background:var(--bg2);
+  }
+  .topbar-title{
+    font-family:'Syne',sans-serif;
+    font-weight:700;font-size:15px;color:var(--text);
+  }
+  .topbar-badges{display:flex;gap:8px;}
+  .badge{
+    padding:4px 10px;border-radius:20px;
+    font-size:11px;font-weight:600;
+    border:1px solid var(--border);
+    color:var(--text2);
+  }
+  .badge.online{border-color:rgba(0,229,200,0.4);color:var(--accent);}
+
+  /* Chat Area */
+  #chat-area{
+    flex:1;overflow-y:auto;
+    padding:24px;
+    display:flex;flex-direction:column;gap:20px;
+  }
+
+  /* Welcome Screen */
+  #welcome{
+    flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;padding:40px;
+    animation:fadeUp 0.6s ease;
+  }
+  .welcome-orb{
+    width:90px;height:90px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:40px;
+    margin-bottom:28px;
+    box-shadow:0 0 60px rgba(0,229,200,0.3),0 0 120px rgba(168,85,247,0.2);
+    animation:pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 60px rgba(0,229,200,0.3),0 0 120px rgba(168,85,247,0.2);}50%{box-shadow:0 0 80px rgba(0,229,200,0.5),0 0 150px rgba(168,85,247,0.35);}}
+  .welcome-title{
+    font-family:'Syne',sans-serif;
+    font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--text),var(--accent));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:12px;
+  }
+  .welcome-sub{font-size:15px;color:var(--text2);max-width:500px;line-height:1.6;margin-bottom:40px;}
+  .welcome-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  .chip{
+    padding:10px 18px;border-radius:100px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    font-size:13px;color:var(--text2);
+    cursor:pointer;transition:all 0.2s;
+    font-family:'DM Sans',sans-serif;
+  }
+  .chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
+
+  /* Messages */
+  .msg-wrap{display:flex;gap:14px;animation:fadeUp 0.35s ease;}
+  .msg-wrap.user{flex-direction:row-reverse;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .avatar{
+    width:36px;height:36px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;flex-shrink:0;
+    align-self:flex-start;
+  }
+  .avatar.ai{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+  .avatar.user{background:var(--surface2);border:1px solid var(--border);}
+  .msg-content{max-width:75%;}
+  .msg-label{font-size:11px;font-weight:600;letter-spacing:0.5px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;}
+  .msg-wrap.user .msg-label{text-align:right;}
+  .bubble{
+    padding:14px 18px;border-radius:16px;
+    font-size:14px;line-height:1.65;color:var(--text);
+  }
+  .bubble.user{background:var(--user-bubble);border:1px solid var(--border);border-radius:16px 4px 16px 16px;}
+  .bubble.ai{background:var(--ai-bubble);border:1px solid var(--border);border-radius:4px 16px 16px 16px;}
+
+  /* Media Card */
+  .media-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    margin-top:10px;
+    transition:border-color 0.2s;
+  }
+  .media-card:hover{border-color:var(--accent);}
+  .media-card img{
+    width:100%;max-height:420px;object-fit:contain;
+    background:#000;display:block;
+    cursor:pointer;
+  }
+  .media-card video{
+    width:100%;max-height:420px;
+    display:block;background:#000;
+  }
+  .media-actions{
+    padding:12px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid var(--border);
+    background:var(--surface2);
+  }
+  .media-info{font-size:12px;color:var(--text2);}
+  .media-info strong{color:var(--text);font-size:13px;display:block;margin-bottom:2px;}
+  .media-btns{display:flex;gap:8px;}
+  .media-btn{
+    padding:7px 14px;border-radius:8px;
+    font-size:12px;font-weight:600;
+    cursor:pointer;border:none;
+    display:flex;align-items:center;gap:5px;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.2s;
+  }
+  .media-btn.download{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;
+  }
+  .media-btn.download:hover{transform:translateY(-1px);box-shadow:var(--glow);}
+  .media-btn.view{
+    background:var(--surface);
+    color:var(--text2);
+    border:1px solid var(--border);
+  }
+  .media-btn.view:hover{color:var(--text);border-color:var(--accent);}
+
+  /* Custom video controls */
+  .video-wrap{position:relative;}
+  .video-overlay{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,0,0,0.3);
+    opacity:0;transition:opacity 0.2s;
+    cursor:pointer;
+  }
+  .video-wrap:hover .video-overlay{opacity:1;}
+  .play-icon{
+    width:56px;height:56px;
+    background:rgba(255,255,255,0.9);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  }
+  .video-controls{
+    padding:10px 16px;
+    display:flex;align-items:center;gap:12px;
+    background:var(--surface2);
+    border-top:1px solid var(--border);
+  }
+  .vc-btn{
+    background:none;border:none;cursor:pointer;
+    color:var(--text);font-size:18px;
+    padding:4px;border-radius:6px;
+    transition:color 0.15s;line-height:1;
+  }
+  .vc-btn:hover{color:var(--accent);}
+  .progress-wrap{flex:1;height:4px;background:var(--surface);border-radius:4px;cursor:pointer;position:relative;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width 0.1s linear;pointer-events:none;}
+  .progress-wrap::after{
+    content:'';position:absolute;top:-6px;bottom:-6px;left:0;right:0;
+  }
+  .vc-time{font-size:11px;color:var(--text2);white-space:nowrap;}
+  .vol-slider{width:60px;-webkit-appearance:none;height:3px;border-radius:3px;background:var(--surface);outline:none;cursor:pointer;}
+  .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);}
+
+  /* Typing indicator */
+  .typing{display:flex;align-items:center;gap:5px;padding:14px 18px;}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:bounce 1.2s infinite;}
+  .typing span:nth-child(2){animation-delay:.2s;}
+  .typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-8px);}}
+
+  /* ====== INPUT AREA ====== */
+  #input-area{
+    padding:16px 24px 20px;
+    border-top:1px solid var(--border);
+    background:var(--bg2);
+  }
+  .input-opts{display:flex;gap:10px;margin-bottom:10px;}
+  .opt-select{
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:7px 12px;border-radius:10px;
+    font-size:13px;font-family:'DM Sans',sans-serif;
+    cursor:pointer;transition:border-color 0.2s;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888bb' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;
+    padding-right:28px;
+  }
+  .opt-select:focus{outline:none;border-color:var(--accent);}
+  .opt-select option{background:var(--surface2);}
+  .input-row{
+    display:flex;align-items:flex-end;gap:10px;
+    background:var(--input-bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:12px 14px;
+    transition:border-color 0.2s;
+  }
+  .input-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,200,0.08);}
+  #prompt-input{
+    flex:1;background:none;border:none;outline:none;
+    color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;
+    resize:none;max-height:120px;min-height:24px;
+    line-height:1.5;
+  }
+  #prompt-input::placeholder{color:var(--text3);}
+  #send-btn{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all 0.2s;flex-shrink:0;
+    box-shadow:0 2px 10px rgba(0,229,200,0.3);
+  }
+  #send-btn:hover{transform:scale(1.06);box-shadow:0 4px 16px rgba(0,229,200,0.45);}
+  #send-btn:active{transform:scale(0.96);}
+  #send-btn svg{transition:transform 0.2s;}
+  #send-btn:hover svg{transform:rotate(-10deg);}
+  .input-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:8px;}
+
+  /* ====== SETTINGS MODAL ====== */
+  #settings-overlay{
+    display:none;position:fixed;inset:0;z-index:100;
+    background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+    align-items:flex-end;
+  }
+  #settings-overlay.open{display:flex;}
+  #settings-modal{
+    width:100%;max-width:480px;margin:0 auto;
+    background:var(--modal);
+    border-radius:20px 20px 0 0;
+    border:1px solid var(--border);
+    border-bottom:none;
+    padding:24px;
+    animation:slideUp 0.3s ease;
+  }
+  @keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .modal-header{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:24px;
+  }
+  .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+  .modal-close{
+    background:none;border:none;cursor:pointer;
+    color:var(--text2);font-size:22px;border-radius:8px;padding:4px 8px;
+    transition:all 0.15s;
+  }
+  .modal-close:hover{color:var(--text);background:var(--surface);}
+  .setting-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 0;border-bottom:1px solid var(--border);
+  }
+  .setting-row:last-child{border-bottom:none;}
+  .setting-info .s-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+  .setting-info .s-desc{font-size:12px;color:var(--text2);}
+
+  /* Toggle */
+  .toggle{position:relative;width:44px;height:24px;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{
+    position:absolute;inset:0;border-radius:24px;
+    background:var(--surface2);cursor:pointer;transition:background 0.25s;
+    border:1px solid var(--border);
+  }
+  .toggle input:checked+.toggle-track{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+  .toggle-track::after{
+    content:'';position:absolute;top:3px;left:3px;
+    width:16px;height:16px;border-radius:50%;
+    background:#fff;transition:transform 0.25s;
+    box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  }
+  .toggle input:checked+.toggle-track::after{transform:translateX(20px);}
+
+  /* Image Lightbox */
+  #lightbox{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:rgba(0,0,0,0.95);
+    align-items:center;justify-content:center;
+    flex-direction:column;gap:16px;
+  }
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px;}
+  #lightbox-close{
+    position:absolute;top:20px;right:20px;
+    background:rgba(255,255,255,0.1);border:none;cursor:pointer;
+    color:#fff;font-size:24px;border-radius:50%;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.2s;
+  }
+  #lightbox-close:hover{background:rgba(255,255,255,0.2);}
+
+  /* Toast */
+  #toast{
+    position:fixed;bottom:100px;right:24px;z-index:300;
+    background:var(--surface2);border:1px solid var(--border);
+    color:var(--text);padding:12px 20px;border-radius:12px;
+    font-size:13px;font-weight:500;
+    box-shadow:var(--shadow);
+    transform:translateX(120%);transition:transform 0.3s ease;
+  }
+  #toast.show{transform:translateX(0);}
+
+  /* Accent line at top */
+  body::before{
+    content:'';position:fixed;top:0;left:0;right:0;height:2px;z-index:999;
+    background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+  }
+
+  /* Quality indicator */
+  .quality-tag{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:10px;font-weight:700;letter-spacing:0.5px;
+    padding:3px 8px;border-radius:6px;margin-left:6px;
+    text-transform:uppercase;
+  }
+  .quality-tag.hd{background:rgba(0,229,200,0.15);color:var(--accent);}
+  .quality-tag.ultra{background:rgba(168,85,247,0.15);color:var(--accent2);}
+
+  /* Loading spinner */
+  .spinner{
+    width:20px;height:20px;
+    border:2px solid var(--border);
+    border-top-color:var(--accent);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    display:inline-block;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Error bubble */
+  .error-bubble{
+    background:rgba(255,68,102,0.1);
+    border:1px solid rgba(255,68,102,0.3);
+    border-radius:12px;padding:12px 16px;
+    color:#ff6688;font-size:13px;margin-top:8px;
+  }
+
+  /* Responsive */
+  @media(max-width:640px){
+    #sidebar{width:220px;min-width:220px;}
+    .media-card img,.media-card video{max-height:280px;}
+  }
+</style>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-darkBg dark:text-gray-100 h-screen flex overflow-hidden transition-colors duration-300">
+<body>
 
-    <aside class="w-64 bg-white dark:bg-darkPanel border-r border-gray-200 dark:border-gray-800 flex flex-col transition-colors duration-300">
-        <div class="p-4 border-b border-gray-200 dark:border-gray-800">
-            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500">Meme Engine AI</h1>
-        </div>
-        
-        <div class="p-4">
-            <button onclick="startNewChat()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                <i class="fas fa-plus"></i> New Meme
-            </button>
-        </div>
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-top">
+    <div class="logo">
+      <div class="logo-icon">🎭</div>
+      <span class="logo-text">MemeForge AI</span>
+    </div>
+    <button class="new-chat-btn" onclick="newChat()">
+      <span>✦</span> New Session
+    </button>
+  </div>
 
-        <div class="flex-1 overflow-y-auto p-4 pt-0">
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">History</h3>
-            <ul id="historyList" class="space-y-2">
-                </ul>
-        </div>
+  <div class="sidebar-section-title">History</div>
+  <div id="history-list">
+    <div class="empty-history" id="empty-history">No sessions yet.<br/>Start creating memes!</div>
+  </div>
 
-        <div class="p-4 border-t border-gray-200 dark:border-gray-800">
-            <button onclick="toggleTheme()" class="flex items-center gap-3 text-sm font-medium hover:text-blue-500 transition-colors w-full">
-                <i id="themeIcon" class="fas fa-moon"></i>
-                <span id="themeText">Dark Mode</span>
-            </button>
-        </div>
-    </aside>
+  <div class="sidebar-bottom">
+    <button class="sidebar-btn" onclick="openSettings()">
+      <span class="sb-icon">⚙️</span> Settings
+    </button>
+    <button class="sidebar-btn" onclick="clearAll()">
+      <span class="sb-icon">🗑️</span> Clear All History
+    </button>
+    <button class="sidebar-btn" onclick="showAbout()">
+      <span class="sb-icon">ℹ️</span> About MemeForge
+    </button>
+  </div>
+</nav>
 
-    <main class="flex-1 flex flex-col relative">
-        
-        <div class="flex-1 overflow-y-auto p-8 flex flex-col items-center justify-center" id="outputArea">
-            <div class="text-center opacity-50" id="welcomeScreen">
-                <i class="fas fa-robot text-6xl mb-4 text-blue-500"></i>
-                <h2 class="text-2xl font-bold mb-2">What are we creating today?</h2>
-                <p>Describe your idea and let the AI generate the perfect meme.</p>
-            </div>
-            
-            <div id="resultContainer" class="hidden w-full max-w-2xl bg-white dark:bg-darkPanel rounded-2xl shadow-lg p-6 flex flex-col items-center">
-                <h3 id="resultTitle" class="text-lg font-bold mb-4 w-full text-left">Generated Output</h3>
-                
-                <div id="mediaBox" class="w-full aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden relative">
-                    <div id="loadingSpinner" class="hidden flex-col items-center">
-                        <i class="fas fa-circle-notch fa-spin text-4xl text-blue-500 mb-2"></i>
-                        <p>AI is processing...</p>
-                    </div>
-                </div>
+<!-- MAIN -->
+<main id="main">
+  <!-- Topbar -->
+  <div id="topbar">
+    <div class="topbar-title" id="session-title">New Session</div>
+    <div class="topbar-badges">
+      <span class="badge online">● AI Online</span>
+      <span class="badge" id="gen-count">50 gens left</span>
+    </div>
+  </div>
 
-                <p id="generatedCaption" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 text-center"></p>
+  <!-- Chat Area -->
+  <div id="chat-area">
+    <!-- Welcome screen -->
+    <div id="welcome">
+      <div class="welcome-orb">🎭</div>
+      <div class="welcome-title">What are we creating?</div>
+      <div class="welcome-sub">Describe any meme idea and I'll craft the perfect viral content — image memes, video memes, or just ask me anything.</div>
+      <div class="welcome-chips">
+        <div class="chip" onclick="setChip('Drake meme about writing code vs watching tutorials')">Drake meme: Code vs Tutorials</div>
+        <div class="chip" onclick="setChip('Distracted boyfriend meme about sleep vs scrolling reels')">Distracted BF meme</div>
+        <div class="chip" onclick="setChip('This is fine dog meme about deadlines')">This Is Fine 🔥</div>
+        <div class="chip" onclick="setChip('Giga chad meme about skipping gym')">Giga Chad meme</div>
+        <div class="chip" onclick="setChip('Sad Keanu meme about Monday mornings')">Sad Keanu Monday</div>
+        <div class="chip" onclick="setChip('Generate a funny meme video about procrastinating studying')">Video: Procrastination 🎬</div>
+      </div>
+    </div>
+  </div>
 
-                <div class="w-full flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex gap-4 text-xl">
-                        <button class="hover:text-blue-500"><i class="fas fa-backward"></i></button>
-                        <button class="hover:text-blue-500"><i class="fas fa-play"></i></button>
-                        <button class="hover:text-blue-500"><i class="fas fa-forward"></i></button>
-                    </div>
-                    <button onclick="downloadMedia()" class="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg font-medium hover:opacity-80 transition-opacity">
-                        <i class="fas fa-download mr-2"></i> Download
-                    </button>
-                </div>
-            </div>
-        </div>
+  <!-- Input Area -->
+  <div id="input-area">
+    <div class="input-opts">
+      <select class="opt-select" id="gen-type">
+        <option value="auto">🤖 Auto Detect</option>
+        <option value="image">🖼️ Image Meme</option>
+        <option value="video">🎬 Video Meme</option>
+        <option value="chat">💬 Just Chat</option>
+      </select>
+      <select class="opt-select" id="gen-quality">
+        <option value="standard">Standard</option>
+        <option value="high" selected>High Quality</option>
+        <option value="ultra">Ultra HD</option>
+      </select>
+      <select class="opt-select" id="gen-style">
+        <option value="funny">😂 Funny</option>
+        <option value="dank">🔥 Dank</option>
+        <option value="wholesome">🥰 Wholesome</option>
+        <option value="dark">😈 Dark Humor</option>
+        <option value="viral">🚀 Viral Style</option>
+      </select>
+    </div>
+    <div class="input-row">
+      <textarea id="prompt-input" placeholder="Describe your meme idea... (e.g., 'Drake meme about eating vs working out')" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="send-btn" onclick="sendMessage()" title="Send (Enter)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+    <div class="input-hint">Press <strong>Enter</strong> to send · <strong>Shift+Enter</strong> for new line · Images & videos download in original quality</div>
+  </div>
+</main>
 
-        <div class="p-6 bg-white dark:bg-darkPanel border-t border-gray-200 dark:border-gray-800">
-            <div class="max-w-4xl mx-auto space-y-4">
-                
-                <div class="flex gap-4 text-sm">
-                    <select id="mediaType" class="bg-gray-100 dark:bg-gray-800 border-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
-                        <option value="video">Video Meme</option>
-                        <option value="photo">Photo Meme</option>
-                    </select>
-                    <select id="quality" class="bg-gray-100 dark:bg-gray-800 border-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
-                        <option value="high">High Quality</option>
-                        <option value="medium">Standard Quality</option>
-                    </select>
-                </div>
+<!-- SETTINGS MODAL -->
+<div id="settings-overlay" onclick="closeSettingsOutside(event)">
+  <div id="settings-modal">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ Settings</div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
 
-                <form id="generateForm" class="relative flex items-center">
-                    <input type="text" id="promptInput" required placeholder="Type your meme idea here... (e.g., 'coding bugs at 3 AM')" 
-                        class="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-xl pl-6 pr-16 py-4 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
-                    <button type="submit" class="absolute right-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition-colors">
-                        <i class="fas fa-paper-plane text-xl"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </main>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">🌙 Dark Mode</div>
+        <div class="s-desc">Toggle between dark and light theme</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="theme-toggle" checked onchange="toggleTheme(this)"/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
 
-    <script>
-        // --- Theme Logic ---
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('themeIcon');
-            const text = document.getElementById('themeText');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fas fa-sun';
-                text.innerText = 'Light Mode';
-            } else {
-                html.classList.add('dark');
-                icon.className = 'fas fa-moon';
-                text.innerText = 'Dark Mode';
-            }
-        }
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">🔊 Sound Effects</div>
+        <div class="s-desc">Play sounds when messages arrive</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="sound-toggle" onchange="saveSetting('sound',this.checked)"/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
 
-        // --- History Logic ---
-        let chatHistory = [];
-        
-        function updateHistory(prompt) {
-            chatHistory.unshift(prompt);
-            const historyList = document.getElementById('historyList');
-            const li = document.createElement('li');
-            li.className = 'text-sm p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer truncate transition-colors';
-            li.innerText = prompt;
-            li.onclick = () => { document.getElementById('promptInput').value = prompt; };
-            historyList.prepend(li);
-        }
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">🚀 Auto-detect Meme Type</div>
+        <div class="s-desc">AI chooses image or video automatically</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="autodetect-toggle" checked onchange="saveSetting('autodetect',this.checked)"/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
 
-        function startNewChat() {
-            document.getElementById('promptInput').value = '';
-            document.getElementById('welcomeScreen').classList.remove('hidden');
-            document.getElementById('resultContainer').classList.add('hidden');
-        }
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">💾 Auto-save Generated Media</div>
+        <div class="s-desc">Automatically save all memes to device</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="autosave-toggle" onchange="saveSetting('autosave',this.checked)"/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
 
-        // --- Core Engine Logic ---
-        document.getElementById('generateForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const prompt = document.getElementById('promptInput').value;
-            const mediaType = document.getElementById('mediaType').value;
-            
-            // Update UI to Loading State
-            document.getElementById('welcomeScreen').classList.add('hidden');
-            document.getElementById('resultContainer').classList.remove('hidden');
-            document.getElementById('mediaBox').innerHTML = `
-                <div class="flex-col items-center flex">
-                    <i class="fas fa-circle-notch fa-spin text-4xl text-blue-500 mb-2"></i>
-                    <p class="font-medium">AI is generating your ${mediaType}...</p>
-                </div>`;
-            document.getElementById('generatedCaption').innerText = "Analyzing prompt and gathering assets...";
-            
-            updateHistory(prompt);
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">📊 Daily Usage</div>
+        <div class="s-desc">Images and videos generated today</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:14px;font-weight:600;" id="daily-usage-display">0 / 100</div>
+        <div style="font-size:11px;color:var(--text2)">Resets midnight</div>
+      </div>
+    </div>
 
-            try {
-                // Call your Python Backend on Vercel
-                const response = await fetch('/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ topic: prompt, vibe: "viral" })
-                });
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="s-label">🔑 API Configuration</div>
+        <div class="s-desc">Set your API keys via Vercel env vars</div>
+      </div>
+      <button onclick="showApiInfo()" style="background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">View Keys</button>
+    </div>
+  </div>
+</div>
 
-                const data = await response.json();
+<!-- IMAGE LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
 
-                if (!response.ok) throw new Error(data.detail || "Server Error");
+<!-- TOAST -->
+<div id="toast"></div>
 
-                // Success! Update UI
-                document.getElementById('generatedCaption').innerText = `Caption Generated: "${data.caption}"`;
-                
-                // Show a placeholder for the video until Shotstack finishes rendering
-                document.getElementById('mediaBox').innerHTML = `
-                    <div class="text-center p-4">
-                        <i class="fas fa-video text-6xl text-green-500 mb-4"></i>
-                        <h3 class="font-bold text-lg text-green-500">Render Started Successfully!</h3>
-                        <p class="text-sm mt-2">Render ID: <span class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">${data.render_id}</span></p>
-                        <p class="text-xs opacity-70 mt-4">Note: It takes a few seconds for the API to compile the MP4 file.</p>
-                    </div>`;
+<script>
+// ========== STATE ==========
+let sessions = JSON.parse(localStorage.getItem('mf_sessions') || '[]');
+let currentSessionId = null;
+let dailyCount = parseInt(localStorage.getItem('mf_daily_count') || '0');
+let dailyDate = localStorage.getItem('mf_daily_date') || '';
+let isGenerating = false;
 
-            } catch (error) {
-                // Handle Errors
-                document.getElementById('mediaBox').innerHTML = `
-                    <div class="text-red-500 text-center">
-                        <i class="fas fa-exclamation-triangle text-4xl mb-2"></i>
-                        <p class="font-bold">Error generating meme</p>
-                        <p class="text-sm">${error.message}</p>
-                    </div>`;
-                document.getElementById('generatedCaption').innerText = "Process failed.";
-            }
-        });
+// Reset daily count if new day
+const today = new Date().toDateString();
+if(dailyDate !== today){ dailyCount = 0; localStorage.setItem('mf_daily_count','0'); localStorage.setItem('mf_daily_date',today); }
 
-        function downloadMedia() {
-            alert("Media will be downloaded once the Shotstack render is fully complete.");
-        }
-    </script>
+// ========== INIT ==========
+function init(){
+  loadSettings();
+  renderHistory();
+  updateGenCount();
+}
+
+function loadSettings(){
+  const theme = localStorage.getItem('mf_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-toggle').checked = (theme === 'dark');
+  const sound = localStorage.getItem('mf_sound') === 'true';
+  document.getElementById('sound-toggle').checked = sound;
+  const autosave = localStorage.getItem('mf_autosave') === 'true';
+  document.getElementById('autosave-toggle').checked = autosave;
+  document.getElementById('daily-usage-display').textContent = `${dailyCount} / 100`;
+}
+
+// ========== THEME ==========
+function toggleTheme(el){
+  const t = el.checked ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('mf_theme', t);
+  showToast(t === 'dark' ? '🌙 Dark mode enabled' : '☀️ Light mode enabled');
+}
+
+function saveSetting(key, val){
+  localStorage.setItem('mf_' + key, val);
+}
+
+// ========== SESSIONS ==========
+function newChat(){
+  currentSessionId = 'sess_' + Date.now();
+  const session = { id: currentSessionId, title: 'New Session', messages: [], created: Date.now() };
+  sessions.unshift(session);
+  saveSessions();
+  renderHistory();
+  clearChatUI();
+  setSessionTitle('New Session');
+}
+
+function loadSession(id){
+  currentSessionId = id;
+  const sess = sessions.find(s => s.id === id);
+  if(!sess) return;
+  setSessionTitle(sess.title);
+  clearChatUI();
+  sess.messages.forEach(m => renderMessage(m, false));
+  document.querySelector('.history-item.active')?.classList.remove('active');
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('active');
+}
+
+function deleteSession(id, e){
+  e.stopPropagation();
+  sessions = sessions.filter(s => s.id !== id);
+  saveSessions();
+  if(currentSessionId === id){ currentSessionId = null; clearChatUI(); }
+  renderHistory();
+}
+
+function clearAll(){
+  if(!confirm('Clear all history?')) return;
+  sessions = [];
+  currentSessionId = null;
+  saveSessions();
+  renderHistory();
+  clearChatUI();
+  showToast('🗑️ History cleared');
+}
+
+function saveSessions(){
+  localStorage.setItem('mf_sessions', JSON.stringify(sessions.slice(0,50)));
+}
+
+function getCurrentSession(){
+  if(!currentSessionId){
+    currentSessionId = 'sess_' + Date.now();
+    const session = { id: currentSessionId, title: 'New Session', messages: [], created: Date.now() };
+    sessions.unshift(session);
+    saveSessions();
+    renderHistory();
+  }
+  return sessions.find(s => s.id === currentSessionId);
+}
+
+// ========== HISTORY RENDER ==========
+function renderHistory(){
+  const list = document.getElementById('history-list');
+  const empty = document.getElementById('empty-history');
+  if(sessions.length === 0){ empty.style.display = 'block'; list.innerHTML = ''; list.appendChild(empty); return; }
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  sessions.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'history-item' + (s.id === currentSessionId ? ' active' : '');
+    el.setAttribute('data-id', s.id);
+    const type = s.messages.some(m => m.mediaType === 'video') ? '🎬' : s.messages.some(m => m.mediaType === 'image') ? '🖼️' : '💬';
+    el.innerHTML = `<span class="h-icon">${type}</span><span class="h-text">${s.title}</span><button class="h-del" onclick="deleteSession('${s.id}',event)" title="Delete">✕</button>`;
+    el.onclick = (e) => { if(e.target.classList.contains('h-del')) return; loadSession(s.id); };
+    list.appendChild(el);
+  });
+}
+
+// ========== SEND MESSAGE ==========
+async function sendMessage(){
+  if(isGenerating) return;
+  const input = document.getElementById('prompt-input');
+  const prompt = input.value.trim();
+  if(!prompt) return;
+
+  input.value = '';
+  autoResize(input);
+
+  // Hide welcome
+  const welcome = document.getElementById('welcome');
+  if(welcome) welcome.style.display = 'none';
+
+  const sess = getCurrentSession();
+  const genType = document.getElementById('gen-type').value;
+  const quality = document.getElementById('gen-quality').value;
+  const style = document.getElementById('gen-style').value;
+
+  // Add user message
+  const userMsg = { role: 'user', content: prompt };
+  sess.messages.push(userMsg);
+  renderMessage(userMsg, true);
+
+  // Update session title
+  if(sess.title === 'New Session' && prompt.length > 0){
+    sess.title = prompt.slice(0,38) + (prompt.length > 38 ? '…' : '');
+    setSessionTitle(sess.title);
+    saveSessions();
+    renderHistory();
+  }
+
+  // Show typing
+  const typingId = 'typing_' + Date.now();
+  showTyping(typingId);
+  isGenerating = true;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt, genType, quality, style,
+        history: sess.messages.slice(-10)
+      })
+    });
+
+    removeTyping(typingId);
+
+    if(!res.ok){
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    const aiMsg = {
+      role: 'assistant',
+      content: data.text || '',
+      mediaType: data.type, // 'image' | 'video' | null
+      mediaUrl: data.url,
+      mediaTitle: data.title,
+      quality,
+    };
+    sess.messages.push(aiMsg);
+    saveSessions();
+
+    renderMessage(aiMsg, true);
+
+    if(data.type === 'image' || data.type === 'video'){
+      dailyCount++;
+      localStorage.setItem('mf_daily_count', dailyCount);
+      updateGenCount();
+      document.getElementById('daily-usage-display').textContent = `${dailyCount} / 100`;
+      if(localStorage.getItem('mf_autosave') === 'true' && data.url) triggerDownload(data.url, `memeforge_${Date.now()}.${data.type === 'video' ? 'mp4' : 'png'}`);
+    }
+
+  } catch(e){
+    removeTyping(typingId);
+    const errMsg = { role: 'assistant', content: '', error: e.message };
+    renderMessage(errMsg, true);
+  }
+
+  isGenerating = false;
+}
+
+// ========== RENDER MESSAGE ==========
+function renderMessage(msg, animate){
+  const chatArea = document.getElementById('chat-area');
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${msg.role === 'user' ? 'user' : 'ai'}`;
+
+  const isUser = msg.role === 'user';
+  const av = `<div class="avatar ${isUser ? 'user' : 'ai'}">${isUser ? '👤' : '🎭'}</div>`;
+  const label = `<div class="msg-label">${isUser ? 'You' : 'MemeForge AI'}</div>`;
+
+  let inner = '';
+
+  if(msg.error){
+    inner = `${label}<div class="error-bubble">⚠️ ${msg.error}</div>`;
+  } else {
+    inner = label;
+    if(msg.content) inner += `<div class="bubble ${isUser ? 'user' : 'ai'}">${escapeHtml(msg.content)}</div>`;
+    if(msg.mediaType === 'image' && msg.mediaUrl){
+      inner += buildImageCard(msg.mediaUrl, msg.mediaTitle, msg.quality);
+    } else if(msg.mediaType === 'video' && msg.mediaUrl){
+      inner += buildVideoCard(msg.mediaUrl, msg.mediaTitle, msg.quality);
+    }
+  }
+
+  wrap.innerHTML = `${isUser ? '' : av}<div class="msg-content">${inner}</div>${isUser ? av : ''}`;
+  chatArea.appendChild(wrap);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function buildImageCard(url, title, quality){
+  const qTag = quality === 'ultra' ? '<span class="quality-tag ultra">ULTRA HD</span>' : quality === 'high' ? '<span class="quality-tag hd">HD</span>' : '';
+  return `<div class="media-card">
+    <img src="${url}" alt="${title||'Meme'}" onclick="openLightbox('${url}')" loading="lazy"/>
+    <div class="media-actions">
+      <div class="media-info">
+        <strong>${escapeHtml(title||'Generated Meme')} ${qTag}</strong>
+        <span>AI-generated image • Click to enlarge</span>
+      </div>
+      <div class="media-btns">
+        <button class="media-btn view" onclick="openLightbox('${url}')">🔍 View</button>
+        <button class="media-btn download" onclick="triggerDownload('${url}','memeforge_${Date.now()}.png')">⬇️ Download</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildVideoCard(url, title, quality){
+  const vidId = 'vid_' + Math.random().toString(36).slice(2);
+  const qTag = quality === 'ultra' ? '<span class="quality-tag ultra">ULTRA HD</span>' : quality === 'high' ? '<span class="quality-tag hd">HD</span>' : '';
+  return `<div class="media-card">
+    <div class="video-wrap">
+      <video id="${vidId}" src="${url}" preload="metadata" onclick="togglePlay('${vidId}')" onloadedmetadata="initPlayer('${vidId}')"></video>
+      <div class="video-overlay" onclick="togglePlay('${vidId}')"><div class="play-icon" id="${vidId}_playicon">▶</div></div>
+    </div>
+    <div class="video-controls">
+      <button class="vc-btn" id="${vidId}_playbtn" onclick="togglePlay('${vidId}')">▶</button>
+      <div class="progress-wrap" id="${vidId}_progwrap" onclick="seekVideo(event,'${vidId}')">
+        <div class="progress-fill" id="${vidId}_prog" style="width:0%"></div>
+      </div>
+      <span class="vc-time" id="${vidId}_time">0:00 / 0:00</span>
+      <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1" oninput="setVol('${vidId}',this.value)" title="Volume"/>
+      <button class="vc-btn" onclick="toggleMute('${vidId}')" title="Mute">🔊</button>
+    </div>
+    <div class="media-actions">
+      <div class="media-info">
+        <strong>${escapeHtml(title||'Generated Video Meme')} ${qTag}</strong>
+        <span>AI-generated video • Click to play</span>
+      </div>
+      <div class="media-btns">
+        <button class="media-btn download" onclick="triggerDownload('${url}','memeforge_${Date.now()}.mp4')">⬇️ Download</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ========== VIDEO PLAYER ==========
+function initPlayer(id){
+  const v = document.getElementById(id);
+  if(!v) return;
+  v.addEventListener('timeupdate', () => updateProgress(id));
+  v.addEventListener('ended', () => {
+    document.getElementById(id+'_playbtn').textContent = '▶';
+    document.getElementById(id+'_playicon').textContent = '▶';
+    document.getElementById(id+'_prog').style.width = '0%';
+  });
+}
+function togglePlay(id){
+  const v = document.getElementById(id);
+  if(!v) return;
+  if(v.paused){ v.play(); document.getElementById(id+'_playbtn').textContent = '⏸'; document.getElementById(id+'_playicon').textContent = '⏸'; }
+  else { v.pause(); document.getElementById(id+'_playbtn').textContent = '▶'; document.getElementById(id+'_playicon').textContent = '▶'; }
+}
+function updateProgress(id){
+  const v = document.getElementById(id);
+  if(!v || !v.duration) return;
+  const pct = (v.currentTime / v.duration) * 100;
+  const prog = document.getElementById(id+'_prog');
+  if(prog) prog.style.width = pct + '%';
+  const timeEl = document.getElementById(id+'_time');
+  if(timeEl) timeEl.textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`;
+}
+function seekVideo(e, id){
+  const v = document.getElementById(id);
+  const wrap = document.getElementById(id+'_progwrap');
+  if(!v || !wrap || !v.duration) return;
+  const rect = wrap.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  v.currentTime = pct * v.duration;
+}
+function setVol(id, val){ const v = document.getElementById(id); if(v) v.volume = val; }
+function toggleMute(id){ const v = document.getElementById(id); if(v){ v.muted = !v.muted; } }
+function fmt(s){ const m = Math.floor(s/60); const sec = Math.floor(s%60); return m + ':' + sec.toString().padStart(2,'0'); }
+
+// ========== TYPING ==========
+function showTyping(id){
+  const chatArea = document.getElementById('chat-area');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap ai';
+  wrap.id = id;
+  wrap.innerHTML = `<div class="avatar ai">🎭</div><div class="msg-content"><div class="msg-label">MemeForge AI</div><div class="bubble ai"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  chatArea.appendChild(wrap);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+function removeTyping(id){ document.getElementById(id)?.remove(); }
+
+// ========== LIGHTBOX ==========
+function openLightbox(url){ document.getElementById('lightbox-img').src = url; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+
+// ========== DOWNLOAD ==========
+function triggerDownload(url, filename){
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.target = '_blank';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('⬇️ Download started!');
+}
+
+// ========== SETTINGS ==========
+function openSettings(){ document.getElementById('settings-overlay').classList.add('open'); }
+function closeSettings(){ document.getElementById('settings-overlay').classList.remove('open'); }
+function closeSettingsOutside(e){ if(e.target === document.getElementById('settings-overlay')) closeSettings(); }
+
+// ========== UI HELPERS ==========
+function clearChatUI(){
+  const ca = document.getElementById('chat-area');
+  ca.innerHTML = '<div id="welcome" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;"><div class="welcome-orb">🎭</div><div class="welcome-title">What are we creating?</div><div class="welcome-sub">Describe any meme idea and I will craft the perfect viral content.</div><div class="welcome-chips"><div class="chip" onclick="setChip("Drake meme about writing code vs watching tutorials")">Drake meme</div><div class="chip" onclick="setChip("Giga chad meme about skipping gym")">Giga Chad meme</div></div></div>';
+}
+
+function setSessionTitle(t){ document.getElementById('session-title').textContent = t; }
+
+function updateGenCount(){
+  const left = Math.max(0, 100 - dailyCount);
+  document.getElementById('gen-count').textContent = `${left} gens left`;
+}
+
+function setChip(text){
+  document.getElementById('prompt-input').value = text;
+  document.getElementById('prompt-input').focus();
+}
+
+function handleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function escapeHtml(s){
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+}
+
+function showToast(msg, dur=3000){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function showAbout(){
+  alert('MemeForge AI v2.0\nPowered by Claude + Replicate\nBuilt for viral meme creation 🚀');
+}
+
+function showApiInfo(){
+  alert('Add these in Vercel Environment Variables:\n\n• ANTHROPIC_API_KEY\n• REPLICATE_API_TOKEN\n\nSee vercel.com/docs/concepts/projects/environment-variables');
+}
+
+// ========== START ==========
+init();
+</script>
 </body>
 </html>
