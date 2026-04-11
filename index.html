@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Engine AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121212',
+                        darkPanel: '#1E1E1E'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-darkBg dark:text-gray-100 h-screen flex overflow-hidden transition-colors duration-300">
+
+    <aside class="w-64 bg-white dark:bg-darkPanel border-r border-gray-200 dark:border-gray-800 flex flex-col transition-colors duration-300">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500">Meme Engine AI</h1>
+        </div>
+        
+        <div class="p-4">
+            <button onclick="startNewChat()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                <i class="fas fa-plus"></i> New Meme
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 pt-0">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">History</h3>
+            <ul id="historyList" class="space-y-2">
+                </ul>
+        </div>
+
+        <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 text-sm font-medium hover:text-blue-500 transition-colors w-full">
+                <i id="themeIcon" class="fas fa-moon"></i>
+                <span id="themeText">Dark Mode</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative">
+        
+        <div class="flex-1 overflow-y-auto p-8 flex flex-col items-center justify-center" id="outputArea">
+            <div class="text-center opacity-50" id="welcomeScreen">
+                <i class="fas fa-robot text-6xl mb-4 text-blue-500"></i>
+                <h2 class="text-2xl font-bold mb-2">What are we creating today?</h2>
+                <p>Describe your idea and let the AI generate the perfect meme.</p>
+            </div>
+            
+            <div id="resultContainer" class="hidden w-full max-w-2xl bg-white dark:bg-darkPanel rounded-2xl shadow-lg p-6 flex flex-col items-center">
+                <h3 id="resultTitle" class="text-lg font-bold mb-4 w-full text-left">Generated Output</h3>
+                
+                <div id="mediaBox" class="w-full aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center mb-4 overflow-hidden relative">
+                    <div id="loadingSpinner" class="hidden flex-col items-center">
+                        <i class="fas fa-circle-notch fa-spin text-4xl text-blue-500 mb-2"></i>
+                        <p>AI is processing...</p>
+                    </div>
+                </div>
+
+                <p id="generatedCaption" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4 text-center"></p>
+
+                <div class="w-full flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex gap-4 text-xl">
+                        <button class="hover:text-blue-500"><i class="fas fa-backward"></i></button>
+                        <button class="hover:text-blue-500"><i class="fas fa-play"></i></button>
+                        <button class="hover:text-blue-500"><i class="fas fa-forward"></i></button>
+                    </div>
+                    <button onclick="downloadMedia()" class="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg font-medium hover:opacity-80 transition-opacity">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 bg-white dark:bg-darkPanel border-t border-gray-200 dark:border-gray-800">
+            <div class="max-w-4xl mx-auto space-y-4">
+                
+                <div class="flex gap-4 text-sm">
+                    <select id="mediaType" class="bg-gray-100 dark:bg-gray-800 border-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="video">Video Meme</option>
+                        <option value="photo">Photo Meme</option>
+                    </select>
+                    <select id="quality" class="bg-gray-100 dark:bg-gray-800 border-none rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="high">High Quality</option>
+                        <option value="medium">Standard Quality</option>
+                    </select>
+                </div>
+
+                <form id="generateForm" class="relative flex items-center">
+                    <input type="text" id="promptInput" required placeholder="Type your meme idea here... (e.g., 'coding bugs at 3 AM')" 
+                        class="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-xl pl-6 pr-16 py-4 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
+                    <button type="submit" class="absolute right-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition-colors">
+                        <i class="fas fa-paper-plane text-xl"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Theme Logic ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fas fa-sun';
+                text.innerText = 'Light Mode';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fas fa-moon';
+                text.innerText = 'Dark Mode';
+            }
+        }
+
+        // --- History Logic ---
+        let chatHistory = [];
+        
+        function updateHistory(prompt) {
+            chatHistory.unshift(prompt);
+            const historyList = document.getElementById('historyList');
+            const li = document.createElement('li');
+            li.className = 'text-sm p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer truncate transition-colors';
+            li.innerText = prompt;
+            li.onclick = () => { document.getElementById('promptInput').value = prompt; };
+            historyList.prepend(li);
+        }
+
+        function startNewChat() {
+            document.getElementById('promptInput').value = '';
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('resultContainer').classList.add('hidden');
+        }
+
+        // --- Core Engine Logic ---
+        document.getElementById('generateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const prompt = document.getElementById('promptInput').value;
+            const mediaType = document.getElementById('mediaType').value;
+            
+            // Update UI to Loading State
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('resultContainer').classList.remove('hidden');
+            document.getElementById('mediaBox').innerHTML = `
+                <div class="flex-col items-center flex">
+                    <i class="fas fa-circle-notch fa-spin text-4xl text-blue-500 mb-2"></i>
+                    <p class="font-medium">AI is generating your ${mediaType}...</p>
+                </div>`;
+            document.getElementById('generatedCaption').innerText = "Analyzing prompt and gathering assets...";
+            
+            updateHistory(prompt);
+
+            try {
+                // Call your Python Backend on Vercel
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic: prompt, vibe: "viral" })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.detail || "Server Error");
+
+                // Success! Update UI
+                document.getElementById('generatedCaption').innerText = `Caption Generated: "${data.caption}"`;
+                
+                // Show a placeholder for the video until Shotstack finishes rendering
+                document.getElementById('mediaBox').innerHTML = `
+                    <div class="text-center p-4">
+                        <i class="fas fa-video text-6xl text-green-500 mb-4"></i>
+                        <h3 class="font-bold text-lg text-green-500">Render Started Successfully!</h3>
+                        <p class="text-sm mt-2">Render ID: <span class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">${data.render_id}</span></p>
+                        <p class="text-xs opacity-70 mt-4">Note: It takes a few seconds for the API to compile the MP4 file.</p>
+                    </div>`;
+
+            } catch (error) {
+                // Handle Errors
+                document.getElementById('mediaBox').innerHTML = `
+                    <div class="text-red-500 text-center">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-2"></i>
+                        <p class="font-bold">Error generating meme</p>
+                        <p class="text-sm">${error.message}</p>
+                    </div>`;
+                document.getElementById('generatedCaption').innerText = "Process failed.";
+            }
+        });
+
+        function downloadMedia() {
+            alert("Media will be downloaded once the Shotstack render is fully complete.");
+        }
+    </script>
+</body>
+</html>
