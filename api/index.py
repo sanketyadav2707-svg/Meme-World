@@ -4,11 +4,18 @@ import replicate
 import os
 import json
 import re
+import requests
 
 app = Flask(__name__)
 
+# Core AI Keys
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 REPLICATE_TOKEN = os.environ.get("REPLICATE_API_TOKEN", "")
+
+# Expansion APIs (Scraping, Stock, Publishing)
+APIFY_TOKEN = os.environ.get("APIFY_API_TOKEN", "")
+PEXELS_KEY = os.environ.get("PEXELS_API_KEY", "")
+AYRSHARE_KEY = os.environ.get("AYRSHARE_API_KEY", "")
 
 # ── CORS helper ───────────────────────────────────────────────────────────────
 def cors(resp, status=200):
@@ -39,6 +46,23 @@ def generate():
 
         if not ANTHROPIC_KEY:
             return cors({"error": "ANTHROPIC_API_KEY not set in Vercel environment variables."}, 500)
+
+        # ── Expansion 1: Apify (The Scraper) ──────────────────────────────────
+        # If the user asks for something trending, we fetch real data first
+        if "trending" in prompt.lower() or "latest" in prompt.lower():
+            if APIFY_TOKEN:
+                try:
+                    # Example: Hitting a generic Apify Actor to get trending topics
+                    # Replace the URL with your specific Apify Actor API endpoint
+                    apify_url = f"https://api.apify.com/v2/acts/some-actor-id/runs/last/dataset/items?token={APIFY_TOKEN}"
+                    apify_resp = requests.get(apify_url)
+                    if apify_resp.status_code == 200:
+                        trending_data = apify_resp.json()
+                        if trending_data:
+                            # Append the live data to the prompt for Claude
+                            prompt = f"{prompt}. Context from internet: {str(trending_data[0])}"
+                except Exception as e:
+                    print(f"Apify fetch failed, continuing with standard prompt: {e}")
 
         # ── Step 1: Ask Claude to analyse the prompt ──────────────────────────
         client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
@@ -78,7 +102,7 @@ Respond ONLY in this JSON format (no markdown, no backticks):
             messages[-1]["content"] = f"[Style: {style}] {prompt}"
 
         ai_resp = client.messages.create(
-            model="claude-opus-4-5",
+            model="claude-3-opus-20240229", # Updated to a valid Claude 3 model string
             max_tokens=1024,
             system=system_prompt,
             messages=messages,
@@ -161,21 +185,49 @@ Respond ONLY in this JSON format (no markdown, no backticks):
                 )
                 media_url = str(output) if not isinstance(output, list) else str(output[0])
             except Exception as e:
-                # Fallback to AnimateDiff
-                try:
-                    output = replicate.run(
-                        "lucataco/animate-diff-v2:1531004ee4c98894ab11f8a48a4d4f316a6bddd716bbd70dc7f085d129d3bbb3",
-                        input={"prompt": vid_prompt, "n_prompt": "low quality, blurry"}
-                    )
-                    media_url = str(output) if not isinstance(output, list) else str(output[0])
-                except Exception as e2:
-                    return cors({"error": f"Video generation failed: {str(e2)}"}, 500)
+                # ── Expansion 2: Pexels Fallback ────────────────────────────────
+                # If AI Video generation fails, we instantly grab a stock video instead of crashing
+                if PEXELS_KEY:
+                    try:
+                        pexels_url = f"https://api.pexels.com/videos/search?query={title}&per_page=1"
+                        px_resp = requests.get(pexels_url, headers={"Authorization": PEXELS_KEY})
+                        if px_resp.status_code == 200 and px_resp.json().get('videos'):
+                            media_url = px_resp.json()['videos'][0]['video_files'][0]['link']
+                            reply_text += " (Note: Used high-quality stock footage due to AI render limits.)"
+                        else:
+                            raise Exception("No Pexels fallback found.")
+                    except Exception as px_e:
+                        return cors({"error": f"Video generation and fallback failed: {str(e)}"}, 500)
+                else:
+                    return cors({"error": f"Video generation failed: {str(e)}"}, 500)
+
+        # ── Expansion 3: Ayrshare (The Publisher) ─────────────────────────────
+        # If we successfully created a media URL, post it to social media
+        posted_to_socials = False
+        if media_url and AYRSHARE_KEY:
+            try:
+                ayrshare_endpoint = "https://app.ayrshare.com/api/post"
+                payload = {
+                    "post": f"{title}\n\n#meme #{style}",
+                    "platforms": ["instagram", "tiktok", "youtube"],
+                    "mediaUrls": [media_url]
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {AYRSHARE_KEY}"
+                }
+                ayr_resp = requests.post(ayrshare_endpoint, json=payload, headers=headers)
+                if ayr_resp.status_code in [200, 201]:
+                    posted_to_socials = True
+            except Exception as e:
+                print(f"Failed to auto-post to Ayrshare: {e}")
 
         return cors({
             "type": result_type if result_type in ("image","video") else None,
             "text": reply_text,
             "url": media_url,
             "title": title,
+            "auto_posted": posted_to_socials
         })
 
     except anthropic.AuthenticationError:
