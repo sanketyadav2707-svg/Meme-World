@@ -63,13 +63,11 @@ You deeply understand:
 ━━━ MEME TEMPLATES AVAILABLE ━━━
 drake, distracted_boyfriend, giga_chad, this_is_fine, expanding_brain, change_my_mind, always_has_been, monkey_puppet, doge, two_buttons, uno_reverse, surprised_pikachu, hide_pain_harold, sad_pablo, woman_yelling_cat, galaxy_brain, bernie_mittens, success_kid, panik_kalm, npc
 
-━━━ DECISION LOGIC ━━━
-• Casual greeting (hi/hello/yo/kya haal/wassup) → type: "chat", respond warmly, introduce yourself briefly, offer to make memes
-• General question about anything → type: "chat", answer fully and helpfully
-• Request for image meme → type: "image"
-• Request for video meme → type: "video"
-• Ambiguous prompt with humor/meme potential → type: "image" (default to image)
-• Always respond in the SAME language the user used
+━━━ DECISION LOGIC (CRITICAL) ━━━
+You MUST correctly distinguish between a conversation and a meme request:
+1. CHAT MODE ("type": "chat"): If the user says a casual greeting (hi/hello), asks a general question, makes a statement, or throws an insult/slang at you. DO NOT generate media. Just reply conversationally. 
+2. MEME MODE ("type": "image" or "video"): ONLY trigger this if the user EXPLICITLY asks for a meme, image, or video, or gives a clear scenario meant to be a meme (e.g., "when the code doesn't compile"). Do not default to image just because the text is funny.
+• Always respond in the SAME language the user used.
 
 ━━━ MEME CAPTION RULES ━━━
 • Top text: Sets up the situation (3-7 words, ALL CAPS)
@@ -83,14 +81,14 @@ drake, distracted_boyfriend, giga_chad, this_is_fine, expanding_brain, change_my
 Respond ONLY in pure JSON. No markdown. No backticks. No extra text.
 {
   "type": "image" | "video" | "chat",
-  "text": "Your conversational reply in the user's language. Be warm, funny, and brief (2-3 sentences). For greetings, introduce yourself as MemeForge AI.",
-  "template": "template_name OR custom",
-  "top_text": "TOP TEXT IN ROMANIZED CAPS",
-  "bottom_text": "BOTTOM TEXT IN ROMANIZED CAPS",
-  "pexels_query": "search query for pexels (4-6 words, specific) — used when template=custom or for video",
-  "pexels_type": "photo | video",
-  "title": "Short meme title (3-5 words)",
-  "explanation": "One sentence: why this meme will be funny/viral"
+  "text": "Your conversational reply in the user's language. Be warm, funny, and brief. For greetings, introduce yourself.",
+  "template": "template_name OR custom" (Leave empty if chat),
+  "top_text": "TOP TEXT IN ROMANIZED CAPS" (Leave empty if chat),
+  "bottom_text": "BOTTOM TEXT IN ROMANIZED CAPS" (Leave empty if chat),
+  "pexels_query": "search query" (Leave empty if chat),
+  "pexels_type": "photo | video" (Leave empty if chat),
+  "title": "Short meme title" (Leave empty if chat),
+  "explanation": "Why this meme is funny" (Leave empty if chat)
 }"""
 
 # ─── CORS helper ──────────────────────────────────────────────────────────────
@@ -356,8 +354,8 @@ def generate():
                 "text":      reply_text or "Yeh lo tera meme! 😂",
                 "url":       img_url,
                 "pexelsUrl": img_url,
-                "topText":   top_text.upper(),
-                "bottomText":bottom_text.upper(),
+                "topText":   top_text.upper() if top_text else "",
+                "bottomText":bottom_text.upper() if bottom_text else "",
                 "title":     title,
                 "quality":   quality
             })
@@ -380,8 +378,8 @@ def generate():
                     "text":      (reply_text or "Video banane mein thodi dikkat aayi, lekin yeh image meme toh lo!") + " (Video background nahi mila, image meme bana diya!)",
                     "url":       fallback_url,
                     "pexelsUrl": fallback_url,
-                    "topText":   top_text.upper(),
-                    "bottomText":bottom_text.upper(),
+                    "topText":   top_text.upper() if top_text else "",
+                    "bottomText":bottom_text.upper() if bottom_text else "",
                     "title":     title,
                     "quality":   quality
                 })
