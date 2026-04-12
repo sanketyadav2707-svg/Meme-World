@@ -1,383 +1,587 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MemeForge AI — India's Meme Machine</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MemeForge AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
-:root[data-theme="dark"]{
-  --bg:#0b0b12;--bg2:#0f0f18;--sb:#0d0d16;
-  --s1:#14141f;--s2:#1c1c2a;--s3:#232335;
-  --bd:rgba(255,107,26,.12);--bd2:rgba(255,255,255,.06);
-  --fire:#FF6B1A;--fire2:#FF9A5C;--teal:#00CFA8;--ind:#7B5EF8;
-  --tx:#F0EDE8;--tx2:#9B94A8;--tx3:#4A4560;
-  --ub:#1A1A2E;--ab:#13131E;--inp:#13131E;--modal:#12121C;
-  --danger:#FF4466;--green:#22C55E;
-  --sf:0 0 40px rgba(255,107,26,.2);--st:0 0 30px rgba(0,207,168,.18);
-  --gf:0 0 0 3px rgba(255,107,26,.15);
-}
-:root[data-theme="light"]{
-  --bg:#FFF8F2;--bg2:#FFF2E8;--sb:#FFF0E6;
-  --s1:#FFFFFF;--s2:#FFF5EE;--s3:#FFE8D6;
-  --bd:rgba(255,107,26,.2);--bd2:rgba(0,0,0,.07);
-  --fire:#E85D0A;--fire2:#FF7A2F;--teal:#00A882;--ind:#6349E8;
-  --tx:#1A1220;--tx2:#6B5E78;--tx3:#B0A0BE;
-  --ub:#FFF0E4;--ab:#FFFFFF;--inp:#FFFFFF;--modal:#FFFFFF;
-  --danger:#DC2626;--green:#16A34A;
-  --sf:0 4px 30px rgba(255,107,26,.15);--st:0 4px 20px rgba(0,168,130,.12);
-  --gf:0 0 0 3px rgba(255,107,26,.1);
-}
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;overflow:hidden;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);display:flex;transition:background .3s,color .3s;}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#080808;
+  color:#ebebeb;
+  display:flex;
+}
+
+/* scrollbar */
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px;}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
 
-/* ── TOP ACCENT LINE ── */
-body::before{content:'';position:fixed;top:0;left:0;right:0;height:2px;z-index:9999;background:linear-gradient(90deg,var(--fire),var(--ind),var(--teal));}
+/* ━━━ SIDEBAR ━━━ */
+#sb{
+  width:252px;min-width:252px;
+  height:100vh;
+  background:#0d0d0d;
+  border-right:1px solid #1a1a1a;
+  display:flex;flex-direction:column;
+  z-index:10;
+}
 
-/* ═══════════════ SIDEBAR ═══════════════ */
-#sidebar{
-  width:268px;min-width:268px;height:100vh;
-  background:var(--sb);border-right:1px solid var(--bd2);
-  display:flex;flex-direction:column;position:relative;z-index:10;
+.sb-logo{
+  padding:20px 18px 16px;
+  border-bottom:1px solid #1a1a1a;
 }
-.logo-area{padding:22px 18px 16px;border-bottom:1px solid var(--bd2);}
-.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
-.logo-flame{
-  width:40px;height:40px;border-radius:12px;
-  background:linear-gradient(135deg,var(--fire),#FF3D00);
-  display:flex;align-items:center;justify-content:center;font-size:20px;
-  box-shadow:0 4px 20px rgba(255,107,26,.5),0 0 0 1px rgba(255,107,26,.3);
-  flex-shrink:0;position:relative;overflow:hidden;
+.logo-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.logo-mark{
+  width:34px;height:34px;border-radius:9px;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
 }
-.logo-flame::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);}
-.logo-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--fire),var(--fire2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.logo-sub{font-size:10px;font-weight:600;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;}
+.logo-name{
+  font-family:'Syne',sans-serif;
+  font-size:16px;font-weight:800;
+  color:#fff;letter-spacing:-0.3px;
+}
+.logo-tag{font-size:10px;color:#444;font-weight:500;letter-spacing:.5px;}
+
 .new-btn{
-  width:100%;padding:12px;border:none;border-radius:14px;cursor:pointer;
-  background:linear-gradient(135deg,var(--fire),#FF3D00);
-  color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;letter-spacing:.3px;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:all .2s;box-shadow:0 4px 16px rgba(255,107,26,.4);position:relative;overflow:hidden;
+  width:100%;padding:10px;border:1px solid #2a2a2a;
+  border-radius:10px;cursor:pointer;
+  background:transparent;color:#ebebeb;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .18s;letter-spacing:.1px;
 }
-.new-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none;}
-.new-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,26,.5);}
-.new-btn:active{transform:translateY(0);}
+.new-btn:hover{background:#fff;color:#000;border-color:#fff;}
 
-.sec-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);padding:16px 18px 8px;}
-#hist-list{flex:1;overflow-y:auto;padding:0 10px 8px;}
-.hi{padding:9px 10px;border-radius:11px;cursor:pointer;display:flex;align-items:center;gap:9px;margin-bottom:2px;transition:background .15s;position:relative;}
-.hi:hover{background:var(--s2);}
-.hi.active{background:var(--s2);border:1px solid var(--bd);}
-.hi-ic{font-size:15px;flex-shrink:0;opacity:.85;}
-.hi-tx{font-size:12.5px;color:var(--tx2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
-.hi-dl{opacity:0;transition:opacity .15s;background:none;border:none;cursor:pointer;color:var(--danger);font-size:14px;padding:2px 5px;border-radius:6px;line-height:1;}
-.hi:hover .hi-dl{opacity:1;}
-.hi-empty{text-align:center;padding:28px 14px;color:var(--tx3);font-size:13px;line-height:1.6;}
-.usage-wrap{margin:4px 10px 10px;background:var(--s2);border:1px solid var(--bd2);border-radius:12px;padding:10px 12px;}
-.usage-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.usage-lbl{font-size:11px;font-weight:600;color:var(--tx2);}
-.usage-num{font-size:11px;font-weight:700;color:var(--fire);}
-.usage-bar{height:4px;background:var(--s3);border-radius:4px;overflow:hidden;}
-.usage-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--teal));border-radius:4px;transition:width .5s;}
-.side-bot{padding:10px 10px 14px;border-top:1px solid var(--bd2);}
-.side-btn{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px;border-radius:11px;color:var(--tx2);font-size:13px;font-weight:500;font-family:'Nunito',sans-serif;transition:all .15s;text-align:left;}
-.side-btn:hover{background:var(--s2);color:var(--tx);}
-.side-btn .si{font-size:16px;width:20px;text-align:center;}
+.sb-section{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:#333;
+  padding:14px 18px 6px;
+}
 
-/* ═══════════════ MAIN ═══════════════ */
-#main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:1;}
-#topbar{padding:13px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd2);background:var(--bg2);flex-shrink:0;}
-.top-l{display:flex;align-items:center;gap:10px;}
-.top-sess{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tbadge{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;}
-.b-live{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25);}
-.b-lang{background:rgba(255,107,26,.1);color:var(--fire);border:1px solid rgba(255,107,26,.25);}
-.top-cnt{font-size:11px;font-weight:700;color:var(--tx2);background:var(--s1);border:1px solid var(--bd2);padding:4px 10px;border-radius:8px;}
+#hist{flex:1;overflow-y:auto;padding:4px 8px;}
+.hitem{
+  padding:8px 10px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:1px;transition:background .12s;
+  position:relative;
+}
+.hitem:hover{background:#161616;}
+.hitem.active{background:#181818;border:1px solid #222;}
+.hitem .hi{font-size:13px;flex-shrink:0;opacity:.7;}
+.hitem .ht{font-size:12.5px;color:#666;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.hitem .hd{
+  opacity:0;transition:opacity .12s;
+  background:none;border:none;cursor:pointer;
+  color:#555;font-size:13px;padding:2px 4px;border-radius:4px;
+  line-height:1;
+}
+.hitem:hover .hd{opacity:1;}
+.hitem .hd:hover{color:#ff4444;}
+.hempty{text-align:center;padding:24px 14px;color:#333;font-size:12.5px;line-height:1.7;}
 
-/* ── Chat area ── */
-#chat-area{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.sb-bot{
+  padding:8px 8px 16px;
+  border-top:1px solid #1a1a1a;
+}
+.sb-btn{
+  width:100%;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:8px;
+  color:#555;font-size:12.5px;font-weight:500;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all .12s;text-align:left;
+}
+.sb-btn:hover{background:#161616;color:#ebebeb;}
+.sb-btn .ico{font-size:14px;width:18px;text-align:center;}
 
-/* ═══════════════ WELCOME ═══════════════ */
+.usage-box{
+  margin:6px 8px 8px;
+  border:1px solid #1a1a1a;border-radius:10px;
+  padding:10px 12px;
+}
+.usage-top{display:flex;justify-content:space-between;margin-bottom:7px;}
+.usage-lbl{font-size:11px;font-weight:600;color:#444;}
+.usage-val{font-size:11px;font-weight:700;color:#ebebeb;}
+.usage-track{height:3px;background:#1e1e1e;border-radius:3px;overflow:hidden;}
+.usage-bar{height:100%;background:#fff;border-radius:3px;transition:width .5s;}
+
+/* ━━━ MAIN ━━━ */
+#main{
+  flex:1;display:flex;flex-direction:column;
+  height:100vh;overflow:hidden;
+}
+
+#topbar{
+  padding:12px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #1a1a1a;
+  flex-shrink:0;background:#080808;
+}
+.tb-left{display:flex;align-items:center;gap:8px;}
+.tb-title{font-weight:700;font-size:14px;color:#ebebeb;}
+.tb-dot{
+  width:7px;height:7px;border-radius:50%;background:#3a3a3a;
+}
+.tb-dot.live{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.5);}
+.tb-right{display:flex;gap:6px;align-items:center;}
+.tb-chip{
+  font-size:11px;font-weight:600;color:#444;
+  border:1px solid #1e1e1e;border-radius:6px;
+  padding:3px 9px;
+}
+
+/* ━━━ CHAT AREA ━━━ */
+#chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* ━━━ WELCOME ━━━ */
 #welcome{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:32px 24px;text-align:center;
-  position:relative;overflow:hidden;min-height:0;
+  padding:40px 32px;text-align:center;
 }
-.mesh{
-  position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 50% at 15% 50%,rgba(255,107,26,.09) 0%,transparent 70%),
-    radial-gradient(ellipse 50% 55% at 85% 30%,rgba(123,94,248,.08) 0%,transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 95%,rgba(0,207,168,.07) 0%,transparent 70%);
-  animation:meshP 6s ease-in-out infinite alternate;
+.w-icon{
+  font-size:42px;margin-bottom:20px;
+  animation:breathe 4s ease-in-out infinite;
 }
-@keyframes meshP{from{opacity:.7;}to{opacity:1;}}
-.floaters{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.fl{position:absolute;font-size:28px;opacity:.06;animation:fl linear infinite;}
-.fl:nth-child(1){left:4%;top:12%;font-size:22px;animation-duration:18s;}
-.fl:nth-child(2){left:88%;top:18%;font-size:30px;animation-duration:22s;animation-delay:-4s;}
-.fl:nth-child(3){left:14%;top:82%;font-size:26px;animation-duration:16s;animation-delay:-8s;}
-.fl:nth-child(4){left:76%;top:78%;font-size:20px;animation-duration:20s;animation-delay:-2s;}
-.fl:nth-child(5){left:46%;top:4%;font-size:32px;animation-duration:24s;animation-delay:-6s;}
-.fl:nth-child(6){left:62%;top:88%;font-size:24px;animation-duration:19s;animation-delay:-11s;}
-@keyframes fl{0%{transform:translateY(0) rotate(0);}50%{transform:translateY(-28px) rotate(10deg);}100%{transform:translateY(0) rotate(0);}}
+@keyframes breathe{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.06);}
+}
+.w-title{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:800;
+  color:#fff;letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.w-sub{
+  font-size:14px;color:#555;
+  line-height:1.65;max-width:420px;
+  margin-bottom:6px;
+}
+.w-sub-hi{
+  font-size:12.5px;color:#333;margin-bottom:36px;
+}
 
-.hero{position:relative;z-index:1;max-width:600px;width:100%;}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,107,26,.1);border:1px solid rgba(255,107,26,.3);
-  border-radius:100px;padding:5px 14px;
-  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--fire);
-  margin-bottom:20px;animation:popIn .5s ease both;
+.chips-title{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:#333;margin-bottom:12px;
 }
-@keyframes popIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
-.hero-icon{
-  width:84px;height:84px;margin:0 auto 22px;border-radius:26px;
-  background:linear-gradient(135deg,var(--fire) 0%,#FF3D00 50%,var(--ind) 100%);
-  display:flex;align-items:center;justify-content:center;font-size:40px;
-  box-shadow:0 0 0 1px rgba(255,107,26,.4),0 0 60px rgba(255,107,26,.3),0 0 120px rgba(123,94,248,.15);
-  animation:iconGlow 3s ease-in-out infinite alternate, iconIn .6s ease .1s both;
-  position:relative;overflow:hidden;
+.chips{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;max-width:560px;width:100%;
 }
-.hero-icon::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);}
-@keyframes iconGlow{from{box-shadow:0 0 0 1px rgba(255,107,26,.4),0 0 60px rgba(255,107,26,.3),0 0 120px rgba(123,94,248,.15);}to{box-shadow:0 0 0 1px rgba(255,107,26,.6),0 0 80px rgba(255,107,26,.5),0 0 160px rgba(123,94,248,.3);}}
-@keyframes iconIn{from{transform:scale(.7) rotate(-10deg);opacity:0;}to{transform:scale(1) rotate(0);opacity:1;}}
-
-.hero-title{
-  font-family:'Rajdhani',sans-serif;font-size:40px;font-weight:700;line-height:1.08;
-  letter-spacing:-.5px;margin-bottom:12px;
-  animation:slideUp .6s ease .2s both;
-}
-@keyframes slideUp{from{transform:translateY(16px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.fire{color:var(--fire);}.teal{color:var(--teal);}
-.hero-sub{font-size:14.5px;color:var(--tx2);line-height:1.65;margin-bottom:6px;animation:slideUp .6s ease .3s both;}
-.hero-hin{font-family:'Noto Sans Devanagari',sans-serif;font-size:13px;color:var(--tx3);margin-bottom:32px;animation:slideUp .6s ease .35s both;}
-
-/* Chips */
-.chips-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;animation:slideUp .6s ease .4s both;}
-.chips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;margin:0 auto;animation:slideUp .6s ease .45s both;}
 .chip{
-  background:var(--s1);border:1px solid var(--bd2);border-radius:13px;
-  padding:11px 12px;cursor:pointer;transition:all .2s;text-align:left;
+  background:#0f0f0f;
+  border:1px solid #1e1e1e;
+  border-radius:10px;padding:11px 12px;
+  cursor:pointer;transition:all .18s;text-align:left;
 }
-.chip:hover{border-color:var(--fire);background:var(--s2);transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,107,26,.15);}
-.chip-ic{font-size:20px;margin-bottom:6px;display:block;}
-.chip-tx{font-size:12px;color:var(--tx2);font-weight:600;line-height:1.35;}
-.chip-lg{font-size:10px;color:var(--tx3);margin-top:3px;font-weight:500;}
+.chip:hover{
+  background:#161616;
+  border-color:#333;
+  transform:translateY(-2px);
+}
+.chip-ico{font-size:18px;margin-bottom:6px;display:block;}
+.chip-tx{font-size:12px;color:#888;font-weight:500;line-height:1.4;}
+.chip-sub{font-size:10px;color:#444;margin-top:3px;}
 
-/* ═══════════════ MESSAGES ═══════════════ */
-.msgs{padding:24px 24px 0;display:flex;flex-direction:column;gap:22px;}
-.mrow{display:flex;gap:12px;animation:msgIn .3s ease;}
+/* ━━━ MESSAGES ━━━ */
+.msgs-container{
+  padding:20px 22px 0;
+  display:flex;flex-direction:column;
+  gap:20px;
+}
+.mrow{
+  display:flex;gap:11px;
+  animation:msgIn .28s ease;
+}
 .mrow.user{flex-direction:row-reverse;}
-@keyframes msgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;align-self:flex-start;margin-top:2px;}
-.av.ai{background:linear-gradient(135deg,var(--fire),#FF3D00);box-shadow:0 2px 10px rgba(255,107,26,.4);}
-.av.usr{background:var(--s3);border:1px solid var(--bd2);}
-.mbody{max-width:73%;}
-.mname{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
-.mrow.user .mname{text-align:right;}
-.bub{padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.65;color:var(--tx);}
-.bub.user{background:var(--ub);border:1px solid var(--bd);border-radius:16px 4px 16px 16px;}
-.bub.ai{background:var(--ab);border:1px solid var(--bd2);border-radius:4px 16px 16px 16px;}
-
-/* Media card */
-.mcard{background:var(--s1);border:1px solid var(--bd2);border-radius:16px;overflow:hidden;margin-top:10px;transition:border-color .2s,box-shadow .2s;}
-.mcard:hover{border-color:rgba(255,107,26,.35);box-shadow:var(--sf);}
-.mcard img{width:100%;max-height:420px;object-fit:contain;background:#000;display:block;cursor:zoom-in;}
-.mcard video{width:100%;max-height:420px;display:block;background:#000;}
-.vwrap{position:relative;background:#000;}
-.vover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;background:rgba(0,0,0,.25);}
-.vwrap:hover .vover{opacity:1;}
-.pbig{width:60px;height:60px;border-radius:50%;background:rgba(255,107,26,.9);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 24px rgba(255,107,26,.5);transition:transform .15s;}
-.pbig:hover{transform:scale(1.1);}
-.vctl{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border-top:1px solid var(--bd2);}
-.vcb{background:none;border:none;cursor:pointer;color:var(--tx);font-size:17px;line-height:1;padding:4px;border-radius:6px;transition:color .15s;}
-.vcb:hover{color:var(--fire);}
-.ptrack{flex:1;height:4px;background:var(--s3);border-radius:4px;cursor:pointer;position:relative;}
-.pfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--fire),var(--teal));pointer-events:none;transition:width .1s linear;}
-.vtime{font-size:11px;color:var(--tx2);white-space:nowrap;font-weight:600;}
-.volsl{width:56px;-webkit-appearance:none;height:3px;border-radius:3px;background:var(--s3);cursor:pointer;}
-.volsl::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--fire);}
-.mfooter{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--s1);border-top:1px solid var(--bd2);}
-.mfi .mft{font-size:13px;font-weight:700;color:var(--tx);}
-.mfi .mfs{font-size:11px;color:var(--tx3);margin-top:1px;}
-.mfbtns{display:flex;gap:7px;}
-.mfbtn{padding:7px 13px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;display:flex;align-items:center;gap:5px;font-family:'Nunito',sans-serif;transition:all .2s;letter-spacing:.2px;}
-.mfbtn.dl{background:linear-gradient(135deg,var(--fire),#FF3D00);color:#fff;box-shadow:0 2px 10px rgba(255,107,26,.35);}
-.mfbtn.dl:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,107,26,.5);}
-.mfbtn.vw{background:var(--s2);color:var(--tx2);border:1px solid var(--bd2);}
-.mfbtn.vw:hover{color:var(--fire);border-color:rgba(255,107,26,.35);}
-.qb{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:5px;text-transform:uppercase;margin-left:6px;vertical-align:middle;}
-.qb-hd{background:rgba(0,207,168,.15);color:var(--teal);}
-.qb-uhd{background:rgba(123,94,248,.15);color:var(--ind);}
-.tydots{display:flex;align-items:center;gap:4px;padding:12px 16px;}
-.tydots span{width:6px;height:6px;border-radius:50%;background:var(--fire);opacity:.7;animation:td 1.2s ease-in-out infinite;}
-.tydots span:nth-child(2){animation-delay:.2s;}
-.tydots span:nth-child(3){animation-delay:.4s;}
-@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.7;}30%{transform:translateY(-7px);opacity:1;}}
-.errbub{background:rgba(255,68,102,.08);border:1px solid rgba(255,68,102,.2);border-radius:12px;padding:11px 15px;color:#FF6688;font-size:13px;margin-top:8px;}
-.cpad{height:20px;flex-shrink:0;}
-
-/* ═══════════════ INPUT ═══════════════ */
-#input-area{padding:14px 24px 18px;border-top:1px solid var(--bd2);background:var(--bg2);flex-shrink:0;}
-.inp-top{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
-.psel{
-  background:var(--s1);border:1px solid var(--bd2);color:var(--tx);
-  padding:7px 10px 7px 12px;border-radius:100px;font-size:12.5px;font-weight:600;
-  font-family:'Nunito',sans-serif;cursor:pointer;transition:border-color .2s,background .2s;
-  -webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%234A4560' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;padding-right:26px;
+@keyframes msgIn{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
 }
-.psel:focus{outline:none;border-color:var(--fire);background-color:var(--s2);}
-.psel option{background:var(--s2);font-weight:600;}
-.ltog{display:flex;background:var(--s1);border:1px solid var(--bd2);border-radius:100px;overflow:hidden;padding:3px;}
-.lopt{padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--tx2);border:none;background:none;font-family:'Nunito',sans-serif;}
-.lopt.active{background:var(--fire);color:#fff;}
-.ibox{display:flex;align-items:flex-end;gap:10px;background:var(--inp);border:1.5px solid var(--bd2);border-radius:18px;padding:12px 14px;transition:border-color .2s,box-shadow .2s;}
-.ibox:focus-within{border-color:var(--fire);box-shadow:var(--gf);}
-#prompt{flex:1;background:none;border:none;outline:none;color:var(--tx);font-size:14.5px;font-family:'Nunito',sans-serif;font-weight:500;resize:none;max-height:130px;min-height:22px;line-height:1.5;}
-#prompt::placeholder{color:var(--tx3);}
-#sbtn{width:42px;height:42px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,var(--fire),#FF3D00);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 3px 12px rgba(255,107,26,.45);}
-#sbtn:hover{transform:scale(1.07) rotate(-5deg);box-shadow:0 5px 20px rgba(255,107,26,.6);}
+.av{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;align-self:flex-start;margin-top:2px;
+}
+.av.ai{background:#fff;color:#000;}
+.av.usr{background:#1e1e1e;border:1px solid #2a2a2a;}
+.mbody{max-width:74%;}
+.mrow.user .mbody{align-items:flex-end;display:flex;flex-direction:column;}
+.mname{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:#333;margin-bottom:5px;
+}
+.bub{
+  padding:11px 15px;border-radius:14px;
+  font-size:14px;line-height:1.65;color:#ebebeb;
+  font-weight:400;
+}
+.bub.user{
+  background:#181818;border:1px solid #222;
+  border-radius:14px 4px 14px 14px;
+}
+.bub.ai{
+  background:#111;border:1px solid #1e1e1e;
+  border-radius:4px 14px 14px 14px;
+}
+.bub.err{
+  background:rgba(255,60,60,.08);
+  border-color:rgba(255,60,60,.2);
+  color:#ff6666;
+}
+
+/* ━━━ MEME CARD ━━━ */
+.mcard{
+  background:#0f0f0f;
+  border:1px solid #1e1e1e;
+  border-radius:14px;overflow:hidden;
+  margin-top:10px;width:100%;
+  max-width:520px;
+  transition:border-color .18s;
+}
+.mcard:hover{border-color:#2a2a2a;}
+.mcard canvas{display:block;width:100%;max-height:400px;object-fit:contain;}
+.mcard img{display:block;width:100%;max-height:400px;object-fit:contain;cursor:zoom-in;}
+.mcard video{display:block;width:100%;max-height:400px;background:#000;}
+
+.mcard-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-top:1px solid #1a1a1a;
+}
+.mcard-info .mct{font-size:12.5px;font-weight:700;color:#ebebeb;}
+.mcard-info .mcs{font-size:11px;color:#444;margin-top:1px;}
+.mcard-btns{display:flex;gap:6px;}
+.mcbtn{
+  padding:6px 12px;border-radius:7px;
+  font-size:12px;font-weight:600;cursor:pointer;border:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  display:flex;align-items:center;gap:5px;transition:all .15s;
+}
+.mcbtn.dl{background:#fff;color:#000;}
+.mcbtn.dl:hover{background:#ddd;}
+.mcbtn.vw{background:transparent;color:#666;border:1px solid #222;}
+.mcbtn.vw:hover{border-color:#333;color:#ebebeb;}
+.qbadge{
+  display:inline-block;font-size:9px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;
+  background:#1e1e1e;color:#666;
+  padding:2px 6px;border-radius:4px;margin-left:5px;
+  vertical-align:middle;
+}
+
+/* Video player */
+.vwrap{position:relative;background:#000;cursor:pointer;}
+.vplay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .18s;
+}
+.vwrap:hover .vplay{opacity:1;}
+.vpbig{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.vctl{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;background:#0f0f0f;
+  border-top:1px solid #1a1a1a;
+}
+.vcbtn{background:none;border:none;cursor:pointer;color:#ebebeb;font-size:16px;padding:3px;border-radius:5px;transition:color .12s;line-height:1;}
+.vcbtn:hover{color:#fff;}
+.ptrack{flex:1;height:3px;background:#1e1e1e;border-radius:3px;cursor:pointer;}
+.pfill{height:100%;background:#fff;border-radius:3px;transition:width .1s linear;pointer-events:none;}
+.vtime{font-size:10px;color:#555;white-space:nowrap;font-weight:600;}
+.volsl{width:52px;-webkit-appearance:none;height:2px;border-radius:2px;background:#1e1e1e;cursor:pointer;}
+.volsl::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;}
+
+/* Video pending */
+.vpending{
+  display:flex;align-items:center;gap:12px;
+  padding:16px;color:#666;font-size:13px;
+}
+.spin{
+  width:18px;height:18px;
+  border:2px solid #222;border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Typing */
+.tydots{display:flex;align-items:center;gap:4px;padding:11px 15px;}
+.tydots span{
+  width:5px;height:5px;border-radius:50%;
+  background:#444;
+  animation:td 1.1s ease-in-out infinite;
+}
+.tydots span:nth-child(2){animation-delay:.18s;}
+.tydots span:nth-child(3){animation-delay:.36s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-5px);opacity:1;}}
+
+.cpad{height:16px;flex-shrink:0;}
+
+/* ━━━ INPUT AREA ━━━ */
+#input-area{
+  padding:12px 22px 16px;
+  border-top:1px solid #1a1a1a;
+  flex-shrink:0;background:#080808;
+}
+.inp-row1{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+
+.psel{
+  background:#0f0f0f;border:1px solid #1e1e1e;
+  color:#888;padding:6px 10px 6px 12px;
+  border-radius:8px;font-size:12px;font-weight:600;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;transition:all .15s;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23444' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  padding-right:24px;
+}
+.psel:hover{border-color:#2a2a2a;color:#ebebeb;}
+.psel:focus{outline:none;border-color:#333;}
+.psel option{background:#111;}
+
+.ltog{
+  display:flex;background:#0f0f0f;
+  border:1px solid #1e1e1e;border-radius:8px;
+  overflow:hidden;padding:2px;gap:2px;
+}
+.lbtn{
+  padding:4px 11px;border-radius:6px;
+  font-size:11.5px;font-weight:700;cursor:pointer;
+  transition:all .15s;color:#444;
+  border:none;background:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.lbtn.on{background:#fff;color:#000;}
+
+.ibox{
+  display:flex;align-items:flex-end;gap:8px;
+  background:#0f0f0f;border:1px solid #1e1e1e;
+  border-radius:14px;padding:11px 13px;
+  transition:border-color .18s;
+}
+.ibox:focus-within{border-color:#2a2a2a;}
+#inp{
+  flex:1;background:none;border:none;outline:none;
+  color:#ebebeb;font-size:14px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;
+  resize:none;max-height:120px;min-height:20px;line-height:1.55;
+}
+#inp::placeholder{color:#2e2e2e;}
+#sbtn{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;
+}
+#sbtn:hover{background:#ddd;transform:scale(1.05);}
 #sbtn:active{transform:scale(.95);}
-#sbtn:disabled{opacity:.5;cursor:default;transform:none;}
-.inp-hint{font-size:11px;color:var(--tx3);text-align:center;margin-top:8px;font-weight:500;}
-.inp-hint b{color:var(--tx2);}
+#sbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.inp-hint{
+  font-size:10.5px;color:#2a2a2a;
+  text-align:center;margin-top:7px;font-weight:500;
+}
+.inp-hint b{color:#333;}
 
-/* ═══════════════ SETTINGS ═══════════════ */
-#sov{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);align-items:flex-end;}
+/* ━━━ SETTINGS DRAWER ━━━ */
+#sov{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+  align-items:flex-end;
+}
 #sov.open{display:flex;}
-#smod{width:100%;max-width:500px;margin:0 auto;background:var(--modal);border:1px solid var(--bd2);border-bottom:none;border-radius:22px 22px 0 0;padding:0 0 24px;animation:drUp .3s cubic-bezier(.16,1,.3,1);overflow:hidden;}
-@keyframes drUp{from{transform:translateY(60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.mhdr{padding:20px 22px 16px;border-bottom:1px solid var(--bd2);display:flex;align-items:center;justify-content:space-between;}
-.mtitle{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;}
-.mclose{background:var(--s2);border:none;cursor:pointer;color:var(--tx2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;}
-.mclose:hover{background:var(--s3);color:var(--tx);}
-.sbody{padding:8px 22px;}
-.srow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--bd2);}
+#smod{
+  width:100%;max-width:480px;margin:0 auto;
+  background:#0d0d0d;
+  border:1px solid #1e1e1e;border-bottom:none;
+  border-radius:18px 18px 0 0;
+  padding:0 0 24px;
+  animation:drawerUp .28s cubic-bezier(.16,1,.3,1);
+  overflow:hidden;
+}
+@keyframes drawerUp{from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.smod-head{
+  padding:18px 20px 14px;
+  border-bottom:1px solid #1a1a1a;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.smod-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#fff;}
+.smod-close{
+  background:#1a1a1a;border:none;cursor:pointer;
+  color:#666;width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .12s;
+}
+.smod-close:hover{background:#222;color:#fff;}
+.smod-body{padding:6px 20px;}
+.srow{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid #141414;
+}
 .srow:last-child{border-bottom:none;}
-.si-lbl{font-size:14px;font-weight:600;margin-bottom:2px;}
-.si-desc{font-size:11.5px;color:var(--tx2);}
-.tog{position:relative;width:46px;height:25px;flex-shrink:0;}
+.slbl{font-size:13.5px;font-weight:600;color:#ebebeb;margin-bottom:2px;}
+.sdesc{font-size:11px;color:#444;}
+
+/* Toggle switch */
+.tog{position:relative;width:42px;height:22px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
-.tog-track{position:absolute;inset:0;border-radius:25px;background:var(--s3);cursor:pointer;transition:background .25s;border:1px solid var(--bd2);}
-.tog input:checked+.tog-track{background:linear-gradient(135deg,var(--fire),#FF3D00);border-color:transparent;}
-.tog-track::after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.16,1,.3,1);box-shadow:0 1px 4px rgba(0,0,0,.3);}
-.tog input:checked+.tog-track::after{transform:translateX(21px);}
+.tog-track{
+  position:absolute;inset:0;border-radius:22px;
+  background:#1e1e1e;cursor:pointer;transition:background .22s;
+  border:1px solid #2a2a2a;
+}
+.tog input:checked+.tog-track{background:#fff;border-color:#fff;}
+.tog-track::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:14px;height:14px;border-radius:50%;
+  background:#444;transition:transform .22s,background .22s;
+}
+.tog input:checked+.tog-track::after{transform:translateX(20px);background:#000;}
 
-/* ═══════════════ LIGHTBOX ═══════════════ */
-#lb{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.96);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
+/* ━━━ LIGHTBOX ━━━ */
+#lb{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.97);
+  align-items:center;justify-content:center;flex-direction:column;
+  gap:14px;
+}
 #lb.open{display:flex;}
-#lb-img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:10px;}
-#lb-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);cursor:pointer;color:#fff;font-size:18px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-#lb-close:hover{background:rgba(255,255,255,.2);}
+#lb-img{max-width:92vw;max-height:86vh;object-fit:contain;border-radius:8px;}
+#lb canvas{max-width:92vw;max-height:86vh;border-radius:8px;}
+#lb-close{
+  position:absolute;top:16px;right:16px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;color:#fff;font-size:16px;
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+#lb-close:hover{background:rgba(255,255,255,.15);}
+#lb-dl{
+  background:#fff;color:#000;border:none;cursor:pointer;
+  padding:9px 22px;border-radius:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;
+  transition:background .15s;display:flex;align-items:center;gap:6px;
+}
+#lb-dl:hover{background:#ddd;}
 
-/* ═══════════════ TOAST ═══════════════ */
-#toast{position:fixed;bottom:90px;right:20px;z-index:300;background:var(--s2);border:1px solid var(--bd2);color:var(--tx);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.3);transform:translateX(140%);transition:transform .35s cubic-bezier(.16,1,.3,1);max-width:280px;}
+/* ━━━ TOAST ━━━ */
+#toast{
+  position:fixed;bottom:80px;right:18px;z-index:300;
+  background:#1a1a1a;border:1px solid #2a2a2a;
+  color:#ebebeb;padding:10px 16px;border-radius:10px;
+  font-size:12.5px;font-weight:600;
+  transform:translateX(130%);
+  transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
 #toast.show{transform:translateX(0);}
 </style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══ -->
-<nav id="sidebar">
-  <div class="logo-area">
+<!-- ━━━ SIDEBAR ━━━ -->
+<nav id="sb">
+  <div class="sb-logo">
     <div class="logo-row">
-      <div class="logo-flame">🔥</div>
+      <div class="logo-mark">🎭</div>
       <div>
-        <div class="logo-title">MemeForge AI</div>
-        <div class="logo-sub">India's Meme Machine</div>
+        <div class="logo-name">MemeForge AI</div>
+        <div class="logo-tag">INDIA'S MEME MACHINE</div>
       </div>
     </div>
     <button class="new-btn" onclick="newChat()">
-      <span style="font-size:18px">✦</span> New Session
+      + New Session
     </button>
   </div>
 
-  <div class="sec-lbl">Sessions</div>
-  <div id="hist-list">
-    <div class="hi-empty" id="hi-empty">Koi session nahi hai abhi.<br/>Meme banao, viral karo! 🚀</div>
+  <div class="sb-section">Sessions</div>
+  <div id="hist">
+    <div class="hempty" id="hempty">No sessions yet.<br/>Start creating!</div>
   </div>
 
-  <div class="usage-wrap">
-    <div class="usage-row">
+  <div class="usage-box">
+    <div class="usage-top">
       <span class="usage-lbl">Daily Usage</span>
-      <span class="usage-num" id="u-num">0 / 100</span>
+      <span class="usage-val" id="u-val">0 / 100</span>
     </div>
-    <div class="usage-bar"><div class="usage-fill" id="u-fill" style="width:0%"></div></div>
+    <div class="usage-track"><div class="usage-bar" id="u-bar" style="width:0%"></div></div>
   </div>
 
-  <div class="side-bot">
-    <button class="side-btn" onclick="openS()"><span class="si">⚙️</span> Settings</button>
-    <button class="side-btn" onclick="clearAll()"><span class="si">🗑️</span> Clear History</button>
-    <button class="side-btn" onclick="apiInfo()"><span class="si">🔑</span> API Setup Guide</button>
+  <div class="sb-bot">
+    <button class="sb-btn" onclick="openSettings()"><span class="ico">⚙</span> Settings</button>
+    <button class="sb-btn" onclick="clearAll()"><span class="ico">⌫</span> Clear All History</button>
+    <button class="sb-btn" onclick="apiHelp()"><span class="ico">?</span> API Keys Help</button>
   </div>
 </nav>
 
-<!-- ═══ MAIN ═══ -->
+<!-- ━━━ MAIN ━━━ -->
 <main id="main">
   <div id="topbar">
-    <div class="top-l">
-      <div class="top-sess" id="sess-title">New Session</div>
-      <span class="tbadge b-live">● Live</span>
-      <span class="tbadge b-lang">🇮🇳 Hindi / English</span>
+    <div class="tb-left">
+      <div class="tb-dot live" id="status-dot"></div>
+      <div class="tb-title" id="tb-title">MemeForge AI</div>
     </div>
-    <span class="top-cnt" id="top-cnt">100 left today</span>
+    <div class="tb-right">
+      <span class="tb-chip" id="tb-count">100 left</span>
+      <span class="tb-chip">🇮🇳 Hinglish</span>
+    </div>
   </div>
 
-  <div id="chat-area">
-    <!-- WELCOME SCREEN -->
+  <div id="chat">
+    <!-- WELCOME -->
     <div id="welcome">
-      <div class="mesh"></div>
-      <div class="floaters">
-        <span class="fl">😂</span><span class="fl">🔥</span>
-        <span class="fl">💀</span><span class="fl">🎭</span>
-        <span class="fl">🚀</span><span class="fl">👀</span>
-      </div>
-      <div class="hero">
-        <div class="hero-badge">🇮🇳 India's #1 AI Meme Creator</div>
-        <div class="hero-icon">🎭</div>
-        <div class="hero-title">Aaj kya <span class="fire">banate</span> hain<span class="teal">?</span></div>
-        <div class="hero-sub">Describe your meme idea in Hindi or English — I'll generate viral image memes & video memes instantly.</div>
-        <div class="hero-hin">Hindi ya English mein idea likho, AI bana dega kamaal ka meme 🔥</div>
-        <div class="chips-lbl">Quick starters — tap karo</div>
-        <div class="chips-grid">
-          <div class="chip" onclick="setChip('Drake meme banao — exam se pehle raat ko padhna vs Netflix dekhna')">
-            <span class="chip-ic">🦆</span>
-            <div class="chip-tx">Drake meme: Padhna vs Netflix</div>
-            <div class="chip-lg">Hindi</div>
-          </div>
-          <div class="chip" onclick="setChip('Distracted boyfriend meme about ignoring work for Instagram reels')">
-            <span class="chip-ic">😍</span>
-            <div class="chip-tx">Distracted BF: Work vs Reels</div>
-            <div class="chip-lg">English</div>
-          </div>
-          <div class="chip" onclick="setChip('Giga chad meme — jo banda ghar pe rehkar paise kamata hai uski taraf se')">
-            <span class="chip-ic">💪</span>
-            <div class="chip-tx">Giga Chad: Ghar se Kaam</div>
-            <div class="chip-lg">Hindi</div>
-          </div>
-          <div class="chip" onclick="setChip('This is fine dog meme about Indian summers hitting 47 degree Celsius with funny Hindi caption')">
-            <span class="chip-ic">🔥</span>
-            <div class="chip-tx">This is Fine: 47°C Garmi</div>
-            <div class="chip-lg">Hindi + English</div>
-          </div>
-          <div class="chip" onclick="setChip('Funny video meme banao jisme Indian student exam ki raat last minute padh raha hai')">
-            <span class="chip-ic">🎬</span>
-            <div class="chip-tx">Video: Exam Ki Raat</div>
-            <div class="chip-lg">Hindi · Video Meme</div>
-          </div>
-          <div class="chip" onclick="setChip('Jugaad style meme — Indian shortcut life hacks with funny Hinglish caption about saving money')">
-            <span class="chip-ic">🛠️</span>
-            <div class="chip-tx">Jugaad Meme: Sasta Shortcut</div>
-            <div class="chip-lg">Hinglish</div>
-          </div>
+      <div class="w-icon">🎭</div>
+      <div class="w-title">What are we creating?</div>
+      <div class="w-sub">Describe any meme idea in Hindi or English — I'll generate viral image memes, video memes, or answer anything you ask.</div>
+      <div class="w-sub-hi">Hindi ya Hinglish mein bhi likho — samajh lunga 👊</div>
+
+      <div class="chips-title">Try these →</div>
+      <div class="chips">
+        <div class="chip" onclick="quickSend('Drake meme banao — padhna chahiye vs reels dekhna')">
+          <span class="chip-ico">🦆</span>
+          <div class="chip-tx">Drake: Padhna vs Reels</div>
+          <div class="chip-sub">Hindi Image Meme</div>
+        </div>
+        <div class="chip" onclick="quickSend('Giga chad meme about guy who sleeps all day but still passes exams')">
+          <span class="chip-ico">💪</span>
+          <div class="chip-tx">Giga Chad: Topper who never studies</div>
+          <div class="chip-sub">English Image Meme</div>
+        </div>
+        <div class="chip" onclick="quickSend('This is fine meme about Indian summer 47 degree with AC band')">
+          <span class="chip-ico">🔥</span>
+          <div class="chip-tx">This is Fine: 47°C Garmi</div>
+          <div class="chip-sub">Hinglish Image Meme</div>
+        </div>
+        <div class="chip" onclick="quickSend('Distracted boyfriend meme — boyfriend is India, girlfriend is IPL, other girl is paytm offer')">
+          <span class="chip-ico">😍</span>
+          <div class="chip-tx">Distracted BF: IPL vs Paytm</div>
+          <div class="chip-sub">Desi Image Meme</div>
+        </div>
+        <div class="chip" onclick="quickSend('Expanding brain meme about how Indians use jugaad to fix everything')">
+          <span class="chip-ico">🧠</span>
+          <div class="chip-tx">Expanding Brain: Jugaad Levels</div>
+          <div class="chip-sub">Image Meme</div>
+        </div>
+        <div class="chip" onclick="quickSend('Make a funny video meme about Indian office culture — meetings that couldve been an email')">
+          <span class="chip-ico">🎬</span>
+          <div class="chip-tx">Video: Meetings ka nautanki</div>
+          <div class="chip-sub">Video Meme</div>
         </div>
       </div>
     </div>
@@ -386,300 +590,656 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:2px;z-index:9
 
   <!-- INPUT -->
   <div id="input-area">
-    <div class="inp-top">
+    <div class="inp-row1">
       <select class="psel" id="gtype">
-        <option value="auto">🤖 Auto Detect</option>
-        <option value="image">🖼️ Image Meme</option>
-        <option value="video">🎬 Video Meme</option>
-        <option value="chat">💬 Just Chat</option>
+        <option value="auto">Auto Detect</option>
+        <option value="image">Image Meme</option>
+        <option value="video">Video Meme</option>
+        <option value="chat">Just Chat</option>
       </select>
       <select class="psel" id="gqual">
-        <option value="standard">Standard</option>
         <option value="high" selected>High Quality</option>
         <option value="ultra">Ultra HD</option>
+        <option value="standard">Standard</option>
       </select>
       <select class="psel" id="gstyle">
         <option value="funny">😂 Funny</option>
         <option value="dank">🔥 Dank</option>
-        <option value="wholesome">🥰 Wholesome</option>
+        <option value="desi">🇮🇳 Desi</option>
         <option value="dark">😈 Dark Humor</option>
-        <option value="desi">🇮🇳 Desi Vibes</option>
+        <option value="wholesome">🥰 Wholesome</option>
       </select>
       <div class="ltog">
-        <button class="lopt active" id="l-hi" onclick="setL('hi')">हि</button>
-        <button class="lopt" id="l-en" onclick="setL('en')">EN</button>
+        <button class="lbtn on" id="l-hi" onclick="setLang('hi')">हि</button>
+        <button class="lbtn" id="l-en" onclick="setLang('en')">EN</button>
       </div>
     </div>
     <div class="ibox">
-      <textarea id="prompt" rows="1"
-        placeholder="Apna meme idea likho... (e.g., 'Drake meme banao IAS vs job ke baare mein')"
-        onkeydown="hKey(event)" oninput="aResize(this)"></textarea>
-      <button id="sbtn" onclick="send()" title="Send (Enter)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <textarea id="inp" rows="1"
+        placeholder="Describe your meme or ask anything... (Hindi / English dono chalega)"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"></textarea>
+      <button id="sbtn" onclick="sendMsg()" title="Send">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
       </button>
     </div>
-    <div class="inp-hint"><b>Enter</b> to send · <b>Shift+Enter</b> new line · All media downloads in original quality</div>
+    <div class="inp-hint"><b>Enter</b> to send · <b>Shift+Enter</b> new line · Downloads in original quality</div>
   </div>
 </main>
 
-<!-- SETTINGS -->
+<!-- SETTINGS DRAWER -->
 <div id="sov" onclick="sovClick(event)">
   <div id="smod">
-    <div class="mhdr">
-      <div class="mtitle">⚙️ Settings</div>
-      <button class="mclose" onclick="closeS()">✕</button>
+    <div class="smod-head">
+      <div class="smod-title">Settings</div>
+      <button class="smod-close" onclick="closeSettings()">✕</button>
     </div>
-    <div class="sbody">
+    <div class="smod-body">
       <div class="srow">
-        <div><div class="si-lbl">🌙 Dark Mode</div><div class="si-desc">Dark / Light theme switch</div></div>
-        <label class="tog"><input type="checkbox" id="tog-theme" checked onchange="togTheme(this)"/><div class="tog-track"></div></label>
+        <div><div class="slbl">🔊 Sound Effects</div><div class="sdesc">Play a sound on new messages</div></div>
+        <label class="tog"><input type="checkbox" id="tog-sound" onchange="saveSet('sound',this.checked)"/><div class="tog-track"></div></label>
       </div>
       <div class="srow">
-        <div><div class="si-lbl">🇮🇳 Prefer Hindi Prompts</div><div class="si-desc">AI replies more in Hindi style</div></div>
-        <label class="tog"><input type="checkbox" id="tog-hi" onchange="saveS('hindi',this.checked)"/><div class="tog-track"></div></label>
+        <div><div class="slbl">💾 Auto-save Media</div><div class="sdesc">Download every generated meme automatically</div></div>
+        <label class="tog"><input type="checkbox" id="tog-save" onchange="saveSet('autosave',this.checked)"/><div class="tog-track"></div></label>
       </div>
       <div class="srow">
-        <div><div class="si-lbl">🚀 Auto-detect Meme Type</div><div class="si-desc">AI auto-picks image or video</div></div>
-        <label class="tog"><input type="checkbox" id="tog-auto" checked onchange="saveS('auto',this.checked)"/><div class="tog-track"></div></label>
+        <div><div class="slbl">🎭 Creative Mode</div><div class="sdesc">AI takes more risks for funnier memes</div></div>
+        <label class="tog"><input type="checkbox" id="tog-creative" checked onchange="saveSet('creative',this.checked)"/><div class="tog-track"></div></label>
       </div>
       <div class="srow">
-        <div><div class="si-lbl">💾 Auto-save to Device</div><div class="si-desc">Auto-download every generated meme</div></div>
-        <label class="tog"><input type="checkbox" id="tog-save" onchange="saveS('save',this.checked)"/><div class="tog-track"></div></label>
-      </div>
-      <div class="srow">
-        <div><div class="si-lbl">📊 Today's Usage</div><div class="si-desc">Resets at midnight IST</div></div>
-        <div style="text-align:right">
-          <div style="font-size:15px;font-weight:800;color:var(--fire)" id="s-usage">0 / 100</div>
-          <div style="font-size:11px;color:var(--tx3)">generated today</div>
-        </div>
+        <div><div class="slbl">📊 Usage Today</div><div class="sdesc">Resets at midnight</div></div>
+        <div style="font-size:14px;font-weight:700;color:#ebebeb" id="s-usage">0 / 100</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- LIGHTBOX -->
-<div id="lb" onclick="closeLB()">
+<div id="lb" onclick="closeLB(event)">
   <button id="lb-close" onclick="closeLB()">✕</button>
-  <img id="lb-img" src="" alt=""/>
+  <img id="lb-img" src="" alt="" style="display:none"/>
+  <canvas id="lb-canvas" style="display:none"></canvas>
+  <button id="lb-dl" onclick="lbDownload()">⬇ Download Full Quality</button>
 </div>
 
 <div id="toast"></div>
 
 <script>
-/* ── STATE ── */
-let sess=JSON.parse(localStorage.getItem('mf3_s')||'[]');
-let cid=null,daily=parseInt(localStorage.getItem('mf3_d')||'0'),busy=false,lang='hi';
-const today=new Date().toDateString();
-if(localStorage.getItem('mf3_dt')!==today){daily=0;localStorage.setItem('mf3_d','0');localStorage.setItem('mf3_dt',today);}
-
-/* ── INIT ── */
-(function(){
-  const t=localStorage.getItem('mf3_theme')||'dark';
-  document.documentElement.setAttribute('data-theme',t);
-  document.getElementById('tog-theme').checked=t==='dark';
-  updCnt();renderHist();
-  document.getElementById('s-usage').textContent=daily+' / 100';
-})();
-
-/* ── THEME ── */
-function togTheme(el){const t=el.checked?'dark':'light';document.documentElement.setAttribute('data-theme',t);localStorage.setItem('mf3_theme',t);toast(t==='dark'?'🌙 Dark mode on':'☀️ Light mode on');}
-function saveS(k,v){localStorage.setItem('mf3_'+k,v);}
-
-/* ── LANG ── */
-function setL(l){
-  lang=l;
-  document.getElementById('l-hi').classList.toggle('active',l==='hi');
-  document.getElementById('l-en').classList.toggle('active',l==='en');
-  document.getElementById('prompt').placeholder=l==='hi'
-    ?'Apna meme idea likho Hindi mein... (e.g., "Drake meme banao padhne aur gaming ke baare mein")'
-    :'Type your meme idea in English... (e.g., "Drake meme about studying vs gaming")';
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ STATE ━━━━━━━━━━━━━━━━━━━━━━━━ */
+let sessions = JSON.parse(localStorage.getItem('mf_sess') || '[]');
+let cid = null;
+let lang = 'hi';
+let busy = false;
+let daily = parseInt(localStorage.getItem('mf_daily') || '0');
+const TODAY = new Date().toDateString();
+if (localStorage.getItem('mf_date') !== TODAY) {
+  daily = 0;
+  localStorage.setItem('mf_daily', '0');
+  localStorage.setItem('mf_date', TODAY);
 }
 
-/* ── SESSIONS ── */
-function newChat(){cid='mf_'+Date.now();sess.unshift({id:cid,title:'New Session',msgs:[],ts:Date.now()});saveSess();renderHist();resetUI();setTitle('New Session');}
-function getS(){return sess.find(s=>s.id===cid);}
-function getOrMake(){if(!cid){cid='mf_'+Date.now();sess.unshift({id:cid,title:'New Session',msgs:[],ts:Date.now()});saveSess();renderHist();}return getS();}
-function loadS(id){cid=id;const s=sess.find(x=>x.id===id);if(!s)return;resetUI(false);const ca=document.getElementById('chat-area');s.msgs.forEach(m=>addMsg(m,ca,false));pad(ca);setTitle(s.title);document.querySelectorAll('.hi').forEach(e=>e.classList.remove('active'));document.querySelector('[data-id="'+id+'"]')?.classList.add('active');ca.scrollTop=ca.scrollHeight;}
-function delS(id,e){e.stopPropagation();sess=sess.filter(s=>s.id!==id);if(cid===id){cid=null;resetUI();}saveSess();renderHist();}
-function clearAll(){if(!confirm('Saara history delete karna chahte ho?'))return;sess=[];cid=null;saveSess();renderHist();resetUI();toast('🗑️ History clear ho gaya');}
-function saveSess(){localStorage.setItem('mf3_s',JSON.stringify(sess.slice(0,60)));}
+// For lightbox download
+let lbCurrentCanvas = null;
+let lbCurrentUrl = null;
 
-/* ── HISTORY ── */
-function renderHist(){
-  const list=document.getElementById('hist-list');
-  const empty=document.getElementById('hi-empty');
-  if(!sess.length){empty.style.display='block';list.innerHTML='';list.appendChild(empty);return;}
-  empty.style.display='none';list.innerHTML='';
-  sess.forEach(s=>{
-    const ic=s.msgs.some(m=>m.mt==='video')?'🎬':s.msgs.some(m=>m.mt==='image')?'🖼️':'💬';
-    const el=document.createElement('div');
-    el.className='hi'+(s.id===cid?' active':'');
-    el.setAttribute('data-id',s.id);
-    el.innerHTML=`<span class="hi-ic">${ic}</span><span class="hi-tx">${esc(s.title)}</span><button class="hi-dl" onclick="delS('${s.id}',event)" title="Delete">✕</button>`;
-    el.onclick=e=>{if(e.target.classList.contains('hi-dl'))return;loadS(s.id);};
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ INIT ━━━━━━━━━━━━━━━━━━━━━━━━ */
+(function init() {
+  updCount();
+  renderHist();
+  loadSettings();
+})();
+
+function loadSettings() {
+  document.getElementById('tog-sound').checked = localStorage.getItem('mf_sound') === 'true';
+  document.getElementById('tog-save').checked = localStorage.getItem('mf_autosave') === 'true';
+  document.getElementById('tog-creative').checked = localStorage.getItem('mf_creative') !== 'false';
+  document.getElementById('s-usage').textContent = daily + ' / 100';
+}
+function saveSet(k, v) { localStorage.setItem('mf_' + k, v); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ LANG ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function setLang(l) {
+  lang = l;
+  document.getElementById('l-hi').classList.toggle('on', l === 'hi');
+  document.getElementById('l-en').classList.toggle('on', l === 'en');
+  const inp = document.getElementById('inp');
+  inp.placeholder = l === 'hi'
+    ? 'Meme idea batao Hindi mein... (e.g. "Drake meme banao IAS vs job ke baare mein")'
+    : 'Describe your meme in English... (e.g. "Drake meme about JEE vs Job")';
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ SESSIONS ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function newChat() {
+  cid = 'mf_' + Date.now();
+  sessions.unshift({ id: cid, title: 'New Session', msgs: [], ts: Date.now() });
+  saveSess();
+  renderHist();
+  resetChatUI();
+  setTitle('New Session');
+}
+
+function getCurr() { return sessions.find(s => s.id === cid); }
+
+function getOrMake() {
+  if (!cid) {
+    cid = 'mf_' + Date.now();
+    sessions.unshift({ id: cid, title: 'New Session', msgs: [], ts: Date.now() });
+    saveSess(); renderHist();
+  }
+  return getCurr();
+}
+
+function loadSession(id) {
+  cid = id;
+  const s = sessions.find(x => x.id === id);
+  if (!s) return;
+  resetChatUI(false);
+  const ca = document.getElementById('chat');
+  s.msgs.forEach(m => appendMsg(m, ca, false));
+  appendPad(ca);
+  setTitle(s.title);
+  ca.scrollTop = ca.scrollHeight;
+  document.querySelectorAll('.hitem').forEach(e => e.classList.remove('active'));
+  document.querySelector('[data-id="' + id + '"]')?.classList.add('active');
+}
+
+function delSess(id, e) {
+  e.stopPropagation();
+  sessions = sessions.filter(s => s.id !== id);
+  if (cid === id) { cid = null; resetChatUI(); }
+  saveSess(); renderHist();
+}
+
+function clearAll() {
+  if (!confirm('Clear all history?')) return;
+  sessions = []; cid = null;
+  saveSess(); renderHist(); resetChatUI();
+  toast('History cleared');
+}
+
+function saveSess() {
+  try { localStorage.setItem('mf_sess', JSON.stringify(sessions.slice(0, 60))); } catch(e) {}
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ RENDER HISTORY ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function renderHist() {
+  const list = document.getElementById('hist');
+  const empty = document.getElementById('hempty');
+  if (!sessions.length) {
+    empty.style.display = 'block';
+    list.innerHTML = '';
+    list.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = '';
+  sessions.forEach(s => {
+    const ic = s.msgs.some(m => m.mt === 'video') ? '🎬'
+              : s.msgs.some(m => m.mt === 'image') ? '🖼'
+              : '💬';
+    const el = document.createElement('div');
+    el.className = 'hitem' + (s.id === cid ? ' active' : '');
+    el.setAttribute('data-id', s.id);
+    el.innerHTML = `<span class="hi">${ic}</span><span class="ht">${esc(s.title)}</span><button class="hd" onclick="delSess('${s.id}',event)" title="Delete">✕</button>`;
+    el.onclick = e => { if (e.target.classList.contains('hd')) return; loadSession(s.id); };
     list.appendChild(el);
   });
 }
 
-/* ── SEND ── */
-async function send(){
-  if(busy)return;
-  const inp=document.getElementById('prompt');
-  const txt=inp.value.trim();if(!txt)return;
-  inp.value='';aResize(inp);
-  const w=document.getElementById('welcome');if(w)w.style.display='none';
-  const s=getOrMake();
-  const type=document.getElementById('gtype').value;
-  const qual=document.getElementById('gqual').value;
-  const style=document.getElementById('gstyle').value;
-  const um={role:'user',content:txt};s.msgs.push(um);
-  const ca=document.getElementById('chat-area');
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ SEND MESSAGE ━━━━━━━━━━━━━━━━━━━━━━━━ */
+async function sendMsg() {
+  if (busy) return;
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = ''; autoResize(inp);
+
+  // Hide welcome
+  const w = document.getElementById('welcome');
+  if (w) w.style.display = 'none';
+
+  const s = getOrMake();
+  const type = document.getElementById('gtype').value;
+  const qual = document.getElementById('gqual').value;
+  const style = document.getElementById('gstyle').value;
+
+  const um = { role: 'user', content: txt };
+  s.msgs.push(um);
+  const ca = document.getElementById('chat');
   ca.querySelector('.cpad')?.remove();
-  addMsg(um,ca,true);
-  if(s.title==='New Session'){s.title=txt.slice(0,40)+(txt.length>40?'…':'');setTitle(s.title);saveSess();renderHist();}
-  const tid='ty_'+Date.now();showTy(tid,ca);
-  busy=true;document.getElementById('sbtn').disabled=true;
-  try{
-    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,genType:type,quality:qual,style,lang,history:s.msgs.slice(-10)})});
-    rmEl(tid);
-    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||'Server error '+r.status);}
-    const d=await r.json();
-    const am={role:'assistant',content:d.text||'',mt:d.type,url:d.url,title:d.title,qual};
-    s.msgs.push(am);saveSess();addMsg(am,ca,true);
-    if(d.type==='image'||d.type==='video'){
-      daily++;localStorage.setItem('mf3_d',daily);updCnt();
-      document.getElementById('s-usage').textContent=daily+' / 100';
-      if(localStorage.getItem('mf3_save')==='true'&&d.url)dlFile(d.url,'memeforge_'+Date.now()+'.'+(d.type==='video'?'mp4':'webp'));
-    }
-  }catch(e){rmEl(tid);addMsg({role:'assistant',content:'',err:e.message},ca,true);}
-  pad(ca);ca.scrollTop=ca.scrollHeight;
-  busy=false;document.getElementById('sbtn').disabled=false;
-}
+  appendMsg(um, ca, true);
 
-/* ── ADD MESSAGE ── */
-function addMsg(m,ca,anim){
-  const isU=m.role==='user';
-  const w=document.createElement('div');w.className='msgs';
-  if(anim)w.style.animation='msgIn .3s ease';
-  const row=document.createElement('div');row.className='mrow '+(isU?'user':'ai');
-  const av=`<div class="av ${isU?'usr':'ai'}">${isU?'👤':'🔥'}</div>`;
-  const nm=`<div class="mname">${isU?'Aap':'MemeForge AI'}</div>`;
-  let body=nm;
-  if(m.err)body+=`<div class="errbub">⚠️ ${esc(m.err)}</div>`;
-  else{
-    if(m.content)body+=`<div class="bub ${isU?'user':'ai'}">${esc(m.content)}</div>`;
-    if(m.mt==='image'&&m.url)body+=imgCard(m);
-    if(m.mt==='video'&&m.url)body+=vidCard(m);
+  if (s.title === 'New Session') {
+    s.title = txt.slice(0, 40) + (txt.length > 40 ? '…' : '');
+    setTitle(s.title); saveSess(); renderHist();
   }
-  row.innerHTML=(isU?'':av)+`<div class="mbody">${body}</div>`+(isU?av:'');
-  w.appendChild(row);ca.appendChild(w);
-  if(m.mt==='video'&&m.url){const v=w.querySelector('video');if(v)initV(v);}
-}
-function pad(ca){const p=document.createElement('div');p.className='cpad';ca.appendChild(p);}
 
-/* ── IMAGE CARD ── */
-function imgCard(m){
-  const q=m.qual==='ultra'?`<span class="qb qb-uhd">ULTRA HD</span>`:m.qual==='high'?`<span class="qb qb-hd">HD</span>`:'';
-  const u=esc(m.url||''),t=esc(m.title||'Generated Meme');
-  return `<div class="mcard"><img src="${u}" alt="${t}" onclick="openLB('${u}')"/><div class="mfooter"><div class="mfi"><div class="mft">${t} ${q}</div><div class="mfs">AI-generated · Click to zoom</div></div><div class="mfbtns"><button class="mfbtn vw" onclick="openLB('${u}')">🔍 View</button><button class="mfbtn dl" onclick="dlFile('${u}','memeforge_${Date.now()}.webp')">⬇️ Download</button></div></div></div>`;
+  const tid = 'ty_' + Date.now();
+  showTyping(tid, ca);
+  busy = true;
+  const btn = document.getElementById('sbtn');
+  btn.disabled = true;
+
+  try {
+    const r = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: txt,
+        genType: type,
+        quality: qual,
+        style: style,
+        lang: lang,
+        history: s.msgs.slice(-12)
+      })
+    });
+
+    rmEl(tid);
+
+    if (!r.ok) {
+      const ed = await r.json().catch(() => ({}));
+      throw new Error(ed.error || 'Server error ' + r.status);
+    }
+
+    const d = await r.json();
+
+    // Handle video pending separately
+    if (d.videoJobId) {
+      const pm = { role: 'assistant', content: d.text || '', mt: 'video_pending', jobId: d.videoJobId, title: d.title || 'Video Meme', qual };
+      s.msgs.push(pm);
+      saveSess();
+      appendMsg(pm, ca, true);
+      pollVideo(d.videoJobId, pm, ca);
+    } else {
+      const am = { role: 'assistant', content: d.text || '', mt: d.type, url: d.url, topText: d.topText, bottomText: d.bottomText, pexelsUrl: d.pexelsUrl, title: d.title || 'Meme', qual };
+      s.msgs.push(am);
+      saveSess();
+      appendMsg(am, ca, true);
+    }
+
+    if (d.type === 'image' || d.type === 'video' || d.videoJobId) {
+      daily++; localStorage.setItem('mf_daily', daily); updCount();
+      document.getElementById('s-usage').textContent = daily + ' / 100';
+    }
+
+  } catch (err) {
+    rmEl(tid);
+    appendMsg({ role: 'assistant', content: '', err: err.message }, ca, true);
+  }
+
+  appendPad(ca);
+  ca.scrollTop = ca.scrollHeight;
+  busy = false;
+  btn.disabled = false;
 }
 
-/* ── VIDEO CARD ── */
-function vidCard(m){
-  const id='v'+Math.random().toString(36).slice(2,7);
-  const q=m.qual==='ultra'?`<span class="qb qb-uhd">ULTRA HD</span>`:m.qual==='high'?`<span class="qb qb-hd">HD</span>`:'';
-  const u=esc(m.url||''),t=esc(m.title||'Generated Video Meme');
+function quickSend(txt) {
+  document.getElementById('inp').value = txt;
+  sendMsg();
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ APPEND MESSAGE ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function appendMsg(m, ca, anim) {
+  const isUser = m.role === 'user';
+  const wrap = document.createElement('div');
+  wrap.className = 'msgs-container';
+  if (anim) wrap.style.animation = 'msgIn .28s ease';
+
+  const row = document.createElement('div');
+  row.className = 'mrow ' + (isUser ? 'user' : 'ai');
+
+  const av = `<div class="av ${isUser ? 'usr' : 'ai'}">${isUser ? '👤' : '🎭'}</div>`;
+  const nm = `<div class="mname">${isUser ? 'You' : 'MemeForge'}</div>`;
+
+  let body = nm;
+
+  if (m.err) {
+    body += `<div class="bub ai err">⚠ ${esc(m.err)}</div>`;
+  } else {
+    if (m.content) body += `<div class="bub ${isUser ? 'user' : 'ai'}">${esc(m.content)}</div>`;
+
+    if (m.mt === 'image' && (m.url || m.pexelsUrl)) {
+      body += buildImageCard(m);
+    } else if (m.mt === 'video' && m.url) {
+      body += buildVideoCard(m);
+    } else if (m.mt === 'video_pending') {
+      body += buildPendingCard(m);
+    }
+  }
+
+  row.innerHTML = (isUser ? '' : av) + `<div class="mbody">${body}</div>` + (isUser ? av : '');
+  wrap.appendChild(row);
+  ca.querySelector('.cpad')?.remove();
+  ca.appendChild(wrap);
+
+  // Render meme on canvas
+  if (m.mt === 'image' && (m.url || m.pexelsUrl)) {
+    const canvas = wrap.querySelector('canvas[data-render]');
+    if (canvas) renderMeme(canvas, m.pexelsUrl || m.url, m.topText || '', m.bottomText || '');
+  }
+}
+
+function appendPad(ca) {
+  const p = document.createElement('div'); p.className = 'cpad'; ca.appendChild(p);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ IMAGE CARD (CANVAS) ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function buildImageCard(m) {
+  const cid2 = 'c_' + Math.random().toString(36).slice(2, 8);
+  const qb = m.qual === 'ultra' ? '<span class="qbadge">ULTRA</span>' : m.qual === 'high' ? '<span class="qbadge">HD</span>' : '';
+  const title = esc(m.title || 'Generated Meme');
   return `<div class="mcard">
-  <div class="vwrap">
-    <video id="${id}" src="${u}" preload="metadata"></video>
-    <div class="vover" onclick="togP('${id}')"><div class="pbig" id="${id}pb">▶</div></div>
-  </div>
-  <div class="vctl">
-    <button class="vcb" id="${id}btn" onclick="togP('${id}')">▶</button>
-    <div class="ptrack" id="${id}pt" onclick="seekV(event,'${id}')"><div class="pfill" id="${id}pf" style="width:0%"></div></div>
-    <span class="vtime" id="${id}tm">0:00 / 0:00</span>
-    <input type="range" class="volsl" min="0" max="1" step="0.05" value="1" oninput="setVol('${id}',this.value)"/>
-  </div>
-  <div class="mfooter"><div class="mfi"><div class="mft">${t} ${q}</div><div class="mfs">AI-generated video · Play above</div></div><div class="mfbtns"><button class="mfbtn dl" onclick="dlFile('${u}','memeforge_${Date.now()}.mp4')">⬇️ Download</button></div></div>
+    <canvas id="${cid2}" data-render="1" onclick="openLBCanvas('${cid2}')" style="cursor:zoom-in;width:100%;"></canvas>
+    <div class="mcard-foot">
+      <div class="mcard-info"><div class="mct">${title} ${qb}</div><div class="mcs">Click to zoom · Canvas rendered</div></div>
+      <div class="mcard-btns">
+        <button class="mcbtn vw" onclick="openLBCanvas('${cid2}')">⛶ View</button>
+        <button class="mcbtn dl" onclick="dlCanvas('${cid2}','${esc(m.title||'meme')}')">↓ Download</button>
+      </div>
+    </div>
   </div>`;
 }
 
-/* ── VIDEO PLAYER ── */
-function initV(v){
-  const id=v.id;
-  v.addEventListener('timeupdate',()=>{
-    if(!v.duration)return;
-    const p=(v.currentTime/v.duration)*100;
-    const pf=document.getElementById(id+'pf'),tm=document.getElementById(id+'tm');
-    if(pf)pf.style.width=p+'%';
-    if(tm)tm.textContent=fmt(v.currentTime)+' / '+fmt(v.duration);
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ CANVAS MEME RENDERER ━━━━━━━━━━━━━━━━━━━━━━━━ */
+async function renderMeme(canvas, imgUrl, topText, bottomText) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      // Use proxied URL for canvas
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      if (topText || bottomText) {
+        const w = canvas.width;
+        const h = canvas.height;
+        const fs = Math.max(28, Math.min(w / 10, 80));
+
+        ctx.textAlign = 'center';
+        ctx.font = `900 ${fs}px Impact, "Arial Black", sans-serif`;
+        ctx.lineWidth = fs / 6;
+        ctx.strokeStyle = '#000';
+        ctx.fillStyle = '#fff';
+        ctx.lineJoin = 'round';
+
+        const drawText = (text, y) => {
+          const words = text.toUpperCase().split(' ');
+          const lines = [];
+          let line = '';
+          words.forEach(word => {
+            const test = line + (line ? ' ' : '') + word;
+            if (ctx.measureText(test).width > w - 20 && line) {
+              lines.push(line); line = word;
+            } else { line = test; }
+          });
+          if (line) lines.push(line);
+
+          lines.forEach((l, i) => {
+            const ly = y + i * (fs * 1.15);
+            ctx.strokeText(l, w / 2, ly);
+            ctx.fillText(l, w / 2, ly);
+          });
+        };
+
+        if (topText) drawText(topText, fs * 1.1);
+        if (bottomText) {
+          const lines = Math.ceil(bottomText.length / 20);
+          drawText(bottomText, h - (fs * 1.1) - (lines - 1) * fs * 1.15);
+        }
+      }
+
+      resolve(canvas);
+    };
+    img.onerror = () => {
+      // If direct load fails, try proxy
+      if (!imgUrl.startsWith('/api/proxy')) {
+        img.src = '/api/proxy?url=' + encodeURIComponent(imgUrl);
+      }
+    };
+    // Try proxy first for reliability
+    img.src = imgUrl.startsWith('/api/proxy') ? imgUrl : '/api/proxy?url=' + encodeURIComponent(imgUrl);
   });
-  v.addEventListener('ended',()=>setPI(id,false));
 }
-function togP(id){const v=document.getElementById(id);if(!v)return;if(v.paused){v.play();setPI(id,true);}else{v.pause();setPI(id,false);}}
-function setPI(id,p){const sym=p?'⏸':'▶';['btn','pb'].forEach(s=>{const el=document.getElementById(id+s);if(el)el.textContent=sym;});}
-function seekV(e,id){const v=document.getElementById(id),pt=document.getElementById(id+'pt');if(!v||!pt||!v.duration)return;const r=pt.getBoundingClientRect();v.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*v.duration;}
-function setVol(id,val){const v=document.getElementById(id);if(v)v.volume=val;}
-function fmt(s){const m=Math.floor(s/60);return m+':'+Math.floor(s%60).toString().padStart(2,'0');}
 
-/* ── TYPING ── */
-function showTy(id,ca){
-  const w=document.createElement('div');w.className='msgs';w.id=id;
-  const row=document.createElement('div');row.className='mrow ai';
-  row.innerHTML=`<div class="av ai">🔥</div><div class="mbody"><div class="mname">MemeForge AI</div><div class="bub ai"><div class="tydots"><span></span><span></span><span></span></div></div></div>`;
-  w.appendChild(row);ca.querySelector('.cpad')?.remove();ca.appendChild(w);ca.scrollTop=ca.scrollHeight;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ VIDEO CARD ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function buildVideoCard(m) {
+  const vid = 'v_' + Math.random().toString(36).slice(2, 7);
+  const qb = m.qual === 'ultra' ? '<span class="qbadge">ULTRA</span>' : m.qual === 'high' ? '<span class="qbadge">HD</span>' : '';
+  const u = esc(m.url || '');
+  const t = esc(m.title || 'Video Meme');
+  return `<div class="mcard">
+    <div class="vwrap">
+      <video id="${vid}" src="${u}" preload="metadata"></video>
+      <div class="vplay" onclick="togV('${vid}')"><div class="vpbig" id="${vid}pb">▶</div></div>
+    </div>
+    <div class="vctl">
+      <button class="vcbtn" id="${vid}btn" onclick="togV('${vid}')">▶</button>
+      <div class="ptrack" id="${vid}pt" onclick="seekV(event,'${vid}')"><div class="pfill" id="${vid}pf" style="width:0%"></div></div>
+      <span class="vtime" id="${vid}tm">0:00 / 0:00</span>
+      <input type="range" class="volsl" min="0" max="1" step="0.05" value="1" oninput="setVol('${vid}',this.value)"/>
+    </div>
+    <div class="mcard-foot">
+      <div class="mcard-info"><div class="mct">${t} ${qb}</div><div class="mcs">AI-generated video</div></div>
+      <div class="mcard-btns">
+        <button class="mcbtn dl" onclick="dlUrl('${u}','${esc(m.title||'video')}.mp4')">↓ Download</button>
+      </div>
+    </div>
+  </div>`;
 }
-function rmEl(id){document.getElementById(id)?.remove();}
 
-/* ── LIGHTBOX ── */
-function openLB(url){document.getElementById('lb-img').src=url;document.getElementById('lb').classList.add('open');}
-function closeLB(){document.getElementById('lb').classList.remove('open');}
+function buildPendingCard(m) {
+  const jobId = m.jobId;
+  const t = esc(m.title || 'Video Meme');
+  return `<div class="mcard" id="pending_${jobId}">
+    <div class="vpending">
+      <div class="spin"></div>
+      <span>Rendering video meme... this takes 15-30 seconds. Hang tight! 🎬</span>
+    </div>
+    <div class="mcard-foot">
+      <div class="mcard-info"><div class="mct">${t}</div><div class="mcs">Video rendering in progress</div></div>
+    </div>
+  </div>`;
+}
 
-/* ── DOWNLOAD ── */
-function dlFile(url,name){const a=document.createElement('a');a.href=url;a.download=name;a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('⬇️ Download shuru ho gaya!');}
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ VIDEO POLLING ━━━━━━━━━━━━━━━━━━━━━━━━ */
+async function pollVideo(jobId, msg, ca) {
+  for (let i = 0; i < 24; i++) { // Max 2 min
+    await sleep(5000);
+    try {
+      const r = await fetch('/api/video/' + jobId);
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.status === 'done' && d.url) {
+        // Update the pending card
+        const card = document.getElementById('pending_' + jobId);
+        if (card) {
+          msg.mt = 'video';
+          msg.url = d.url;
+          const newCard = document.createElement('div');
+          newCard.innerHTML = buildVideoCard(msg);
+          card.replaceWith(newCard.firstChild);
+          const v = newCard.querySelector('video');
+          if (v) initVid(v.id);
+        }
+        saveSess();
+        if (localStorage.getItem('mf_autosave') === 'true') dlUrl(d.url, 'memeforge_video.mp4');
+        return;
+      }
+      if (d.status === 'failed') {
+        const card = document.getElementById('pending_' + jobId);
+        if (card) card.innerHTML = '<div class="bub ai err" style="margin:12px">⚠ Video rendering failed. Try again.</div>';
+        return;
+      }
+    } catch (e) {}
+  }
+  // Timeout
+  const card = document.getElementById('pending_' + jobId);
+  if (card) card.innerHTML = '<div class="bub ai err" style="margin:12px">⚠ Video timed out. Please try again.</div>';
+}
 
-/* ── SETTINGS ── */
-function openS(){document.getElementById('sov').classList.add('open');}
-function closeS(){document.getElementById('sov').classList.remove('open');}
-function sovClick(e){if(e.target===document.getElementById('sov'))closeS();}
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ VIDEO PLAYER ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function initVid(id) {
+  const v = document.getElementById(id);
+  if (!v) return;
+  v.addEventListener('timeupdate', () => {
+    if (!v.duration) return;
+    const pf = document.getElementById(id + 'pf');
+    const tm = document.getElementById(id + 'tm');
+    if (pf) pf.style.width = (v.currentTime / v.duration * 100) + '%';
+    if (tm) tm.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
+  });
+  v.addEventListener('ended', () => setPI(id, false));
+}
 
-/* ── HELPERS ── */
-function resetUI(wlcm=true){
-  const ca=document.getElementById('chat-area');ca.innerHTML='';
-  if(wlcm){
-    ca.innerHTML=`<div id="welcome" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;position:relative;overflow:hidden;min-height:0;">
-      <div class="mesh"></div>
-      <div class="floaters"><span class="fl">😂</span><span class="fl">🔥</span><span class="fl">💀</span><span class="fl">🎭</span><span class="fl">🚀</span><span class="fl">👀</span></div>
-      <div class="hero">
-        <div class="hero-badge">🇮🇳 India's #1 AI Meme Creator</div>
-        <div class="hero-icon">🎭</div>
-        <div class="hero-title">Aaj kya <span class="fire">banate</span> hain<span class="teal">?</span></div>
-        <div class="hero-sub">Describe your meme idea in Hindi or English — I'll generate viral image memes and video memes instantly.</div>
-        <div class="hero-hin">Hindi ya English mein idea likho, AI bana dega kamaal ka meme 🔥</div>
-        <div class="chips-lbl">Quick starters — tap karo</div>
-        <div class="chips-grid">
-          <div class="chip" onclick="setChip('Drake meme banao — exam se pehle raat ko padhna vs Netflix dekhna')"><span class="chip-ic">🦆</span><div class="chip-tx">Drake: Padhna vs Netflix</div><div class="chip-lg">Hindi</div></div>
-          <div class="chip" onclick="setChip('Distracted boyfriend meme about ignoring work for Instagram reels')"><span class="chip-ic">😍</span><div class="chip-tx">Distracted BF: Work vs Reels</div><div class="chip-lg">English</div></div>
-          <div class="chip" onclick="setChip('Giga chad meme — jo banda ghar pe rehkar paise kamata hai')"><span class="chip-ic">💪</span><div class="chip-tx">Giga Chad: Ghar se Kaam</div><div class="chip-lg">Hindi</div></div>
-          <div class="chip" onclick="setChip('This is fine meme about 47 degree Indian summer with Hindi caption')"><span class="chip-ic">🔥</span><div class="chip-tx">This is Fine: 47°C Garmi</div><div class="chip-lg">Hinglish</div></div>
-          <div class="chip" onclick="setChip('Funny video meme: Indian student exam ki raat last minute padh raha hai')"><span class="chip-ic">🎬</span><div class="chip-tx">Video: Exam Ki Raat</div><div class="chip-lg">Hindi · Video</div></div>
-          <div class="chip" onclick="setChip('Jugaad style meme with funny Hinglish caption about Indian shortcuts')"><span class="chip-ic">🛠️</span><div class="chip-tx">Jugaad Meme</div><div class="chip-lg">Hinglish</div></div>
-        </div>
+function togV(id) {
+  const v = document.getElementById(id);
+  if (!v) return;
+  if (v.paused) { v.play(); setPI(id, true); } else { v.pause(); setPI(id, false); }
+}
+function setPI(id, p) {
+  ['btn', 'pb'].forEach(s => { const el = document.getElementById(id + s); if (el) el.textContent = p ? '⏸' : '▶'; });
+}
+function seekV(e, id) {
+  const v = document.getElementById(id), pt = document.getElementById(id + 'pt');
+  if (!v || !pt || !v.duration) return;
+  const r = pt.getBoundingClientRect();
+  v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration;
+}
+function setVol(id, val) { const v = document.getElementById(id); if (v) v.volume = parseFloat(val); }
+function fmt(s) { const m = Math.floor(s / 60); return m + ':' + Math.floor(s % 60).toString().padStart(2, '0'); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ TYPING INDICATOR ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function showTyping(id, ca) {
+  const wrap = document.createElement('div');
+  wrap.className = 'msgs-container'; wrap.id = id;
+  const row = document.createElement('div'); row.className = 'mrow ai';
+  row.innerHTML = `<div class="av ai">🎭</div><div class="mbody"><div class="mname">MemeForge</div><div class="bub ai"><div class="tydots"><span></span><span></span><span></span></div></div></div>`;
+  wrap.appendChild(row);
+  ca.querySelector('.cpad')?.remove();
+  ca.appendChild(wrap);
+  ca.scrollTop = ca.scrollHeight;
+}
+function rmEl(id) { document.getElementById(id)?.remove(); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ DOWNLOAD ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function dlCanvas(canvasId, title) {
+  const c = document.getElementById(canvasId);
+  if (!c) return;
+  const a = document.createElement('a');
+  a.download = 'memeforge_' + (title || 'meme').replace(/[^a-z0-9]/gi, '_') + '.png';
+  a.href = c.toDataURL('image/png', 1.0);
+  a.click();
+  toast('Downloaded!');
+}
+
+function dlUrl(url, name) {
+  const a = document.createElement('a');
+  a.href = url; a.download = name || 'memeforge.mp4'; a.target = '_blank';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('Download started!');
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ LIGHTBOX ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function openLBCanvas(canvasId) {
+  const src = document.getElementById(canvasId);
+  if (!src) return;
+  lbCurrentCanvas = src;
+  lbCurrentUrl = null;
+  const lbc = document.getElementById('lb-canvas');
+  const lbi = document.getElementById('lb-img');
+  lbc.width = src.width; lbc.height = src.height;
+  lbc.getContext('2d').drawImage(src, 0, 0);
+  lbc.style.display = 'block';
+  lbi.style.display = 'none';
+  document.getElementById('lb').classList.add('open');
+}
+
+function openLBUrl(url) {
+  lbCurrentUrl = url; lbCurrentCanvas = null;
+  const lbi = document.getElementById('lb-img');
+  const lbc = document.getElementById('lb-canvas');
+  lbi.src = url; lbi.style.display = 'block'; lbc.style.display = 'none';
+  document.getElementById('lb').classList.add('open');
+}
+
+function closeLB(e) {
+  if (!e || e.target === document.getElementById('lb') || e.target === document.getElementById('lb-close')) {
+    document.getElementById('lb').classList.remove('open');
+  }
+}
+
+function lbDownload() {
+  if (lbCurrentCanvas) {
+    const a = document.createElement('a');
+    a.download = 'memeforge_' + Date.now() + '.png';
+    a.href = lbCurrentCanvas.toDataURL('image/png', 1.0);
+    a.click(); toast('Downloaded full quality!');
+  } else if (lbCurrentUrl) {
+    dlUrl(lbCurrentUrl, 'memeforge_' + Date.now() + '.mp4');
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ SETTINGS ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function openSettings() { document.getElementById('sov').classList.add('open'); }
+function closeSettings() { document.getElementById('sov').classList.remove('open'); }
+function sovClick(e) { if (e.target === document.getElementById('sov')) closeSettings(); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━ UI HELPERS ━━━━━━━━━━━━━━━━━━━━━━━━ */
+function resetChatUI(showWelcome = true) {
+  const ca = document.getElementById('chat');
+  ca.innerHTML = '';
+  if (showWelcome) {
+    ca.innerHTML = `<div id="welcome" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center;">
+      <div class="w-icon">🎭</div>
+      <div class="w-title">What are we creating?</div>
+      <div class="w-sub">Describe any meme idea in Hindi or English — image memes, video memes, or just ask me anything.</div>
+      <div class="w-sub-hi">Hindi ya Hinglish mein bhi likho — samajh lunga 👊</div>
+      <div class="chips-title">Try these →</div>
+      <div class="chips">
+        <div class="chip" onclick="quickSend('Drake meme banao — padhna chahiye vs reels dekhna')"><span class="chip-ico">🦆</span><div class="chip-tx">Drake: Padhna vs Reels</div><div class="chip-sub">Hindi Image Meme</div></div>
+        <div class="chip" onclick="quickSend('Giga chad meme about guy who sleeps all day but still passes exams')"><span class="chip-ico">💪</span><div class="chip-tx">Giga Chad: Never Studies Topper</div><div class="chip-sub">English Image Meme</div></div>
+        <div class="chip" onclick="quickSend('This is fine meme about Indian summer 47 degree with AC band')"><span class="chip-ico">🔥</span><div class="chip-tx">This is Fine: 47°C Garmi</div><div class="chip-sub">Hinglish Image Meme</div></div>
+        <div class="chip" onclick="quickSend('Distracted boyfriend meme — me, my work deadlines, and YouTube shorts')"><span class="chip-ico">😍</span><div class="chip-tx">Distracted BF: Deadlines vs Shorts</div><div class="chip-sub">Desi Meme</div></div>
+        <div class="chip" onclick="quickSend('Expanding brain meme about jugaad levels of Indians')"><span class="chip-ico">🧠</span><div class="chip-tx">Expanding Brain: Jugaad Levels</div><div class="chip-sub">Image Meme</div></div>
+        <div class="chip" onclick="quickSend('Make a funny video meme about Indian office culture — meetings that couldve been an email')"><span class="chip-ico">🎬</span><div class="chip-tx">Video: Office Nautanki</div><div class="chip-sub">Video Meme</div></div>
       </div>
     </div>`;
   }
-  pad(ca);
+  appendPad(ca);
 }
-function setTitle(t){document.getElementById('sess-title').textContent=t;}
-function updCnt(){const l=Math.max(0,100-daily);document.getElementById('top-cnt').textContent=l+' left today';document.getElementById('u-num').textContent=daily+' / 100';document.getElementById('u-fill').style.width=Math.min(daily,100)+'%';}
-function setChip(t){document.getElementById('prompt').value=t;document.getElementById('prompt').focus();}
-function hKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
-function aResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,130)+'px';}
-function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br/>');}
-function toast(msg,d=3200){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
-function apiInfo(){alert('Vercel mein yeh Environment Variables add karo:\n\n🔑 ANTHROPIC_API_KEY\n   → console.anthropic.com\n\n🔑 REPLICATE_API_TOKEN\n   → replicate.com/account/api-tokens\n\nDono free mein milte hain signup ke baad! 🚀');}
+
+function setTitle(t) {
+  document.getElementById('tb-title').textContent = t.slice(0, 50);
+  document.title = t + ' — MemeForge AI';
+}
+
+function updCount() {
+  const left = Math.max(0, 100 - daily);
+  document.getElementById('tb-count').textContent = left + ' left';
+  document.getElementById('u-val').textContent = daily + ' / 100';
+  document.getElementById('u-bar').style.width = Math.min(daily, 100) + '%';
+}
+
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br/>');
+}
+function toast(msg, d = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), d);
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function apiHelp() {
+  alert('Your Vercel env vars are already set! ✅\n\nAPIs in use:\n• GROQ_API_KEY → AI brain (chat + meme text)\n• PEXELS_API_KEY → Meme images & video backgrounds\n• SHOTSTACK_KEY → Video meme rendering\n• GEMINI_API_KEY → Backup AI & creative suggestions\n\nAll these are already configured in your Vercel dashboard!');
+}
 </script>
 </body>
 </html>
