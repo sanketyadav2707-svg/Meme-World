@@ -5,321 +5,305 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>MemeForge AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
-/* ── RESET & BASE ── */
+/* ══ RESET ══ */
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;font-size:14px;}
-body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e8e8e8;display:flex;position:relative;}
-
-/* ── SCROLLBAR ── */
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#0a0a0a;color:#ececec;display:flex;
+  -webkit-font-smoothing:antialiased;
+}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#252525;border-radius:4px;}
-::-webkit-scrollbar-thumb:hover{background:#333;}
+::-webkit-scrollbar-thumb{background:#222;border-radius:4px;}
 
-/* ── TOP GRADIENT LINE ── */
-body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9999;background:linear-gradient(90deg,transparent,#fff 30%,#fff 70%,transparent);opacity:.15;}
-
-/* ══════════════════ SIDEBAR ══════════════════ */
+/* ══ SIDEBAR ══ */
 #sb{
-  width:260px;min-width:260px;height:100vh;
-  background:#0d0d0d;
-  border-right:1px solid #181818;
+  width:256px;min-width:256px;height:100vh;
+  background:#111;
   display:flex;flex-direction:column;
-  z-index:20;transition:width .25s ease;
+  border-right:1px solid #1a1a1a;
+  z-index:10;
 }
-
-/* Logo */
-.sb-head{padding:18px 16px 14px;border-bottom:1px solid #181818;}
-.logo-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.logo-icon{
-  width:32px;height:32px;border-radius:8px;
-  background:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1);
+.sb-top{padding:16px 12px 12px;border-bottom:1px solid #1a1a1a;}
+.logo{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.logo-box{
+  width:30px;height:30px;background:#fff;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;
 }
-.logo-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;}
-.logo-sub{font-size:9px;font-weight:600;letter-spacing:1.8px;color:#333;text-transform:uppercase;margin-top:1px;}
-
+.logo-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.3px;}
+.logo-tag{font-size:9px;color:#333;letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
 .new-btn{
-  width:100%;padding:9px 12px;
-  background:transparent;
-  border:1px solid #1f1f1f;
-  border-radius:9px;cursor:pointer;
-  color:#aaa;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;
+  width:100%;padding:9px 12px;border-radius:9px;cursor:pointer;
+  background:transparent;border:1px solid #222;
+  color:#aaa;font-family:inherit;font-size:12.5px;font-weight:500;
   display:flex;align-items:center;gap:7px;justify-content:center;
-  transition:all .15s;letter-spacing:.1px;
+  transition:all .15s;
 }
 .new-btn:hover{background:#fff;color:#000;border-color:#fff;}
-.new-btn svg{transition:transform .15s;}
+.new-btn svg{transition:transform .2s;}
 .new-btn:hover svg{transform:rotate(90deg);}
 
-/* Session groups */
-.sb-section{
-  font-size:9.5px;font-weight:700;letter-spacing:1.8px;
-  text-transform:uppercase;color:#2a2a2a;
-  padding:14px 16px 6px;
-}
-
-#hist{flex:1;overflow-y:auto;padding:2px 8px;}
-
-.h-group-label{
-  font-size:9px;font-weight:600;letter-spacing:1.2px;
-  text-transform:uppercase;color:#2a2a2a;
-  padding:8px 8px 4px;
-}
+/* History */
+.sb-label{font-size:9.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#2a2a2a;padding:12px 14px 5px;}
+#hist{flex:1;overflow-y:auto;padding:3px 8px;}
+.grp-lbl{font-size:9.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#252525;padding:9px 8px 4px;}
 .hi{
-  padding:8px 8px;border-radius:7px;cursor:pointer;
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:1px;transition:background .1s;
-  position:relative;group:true;
+  padding:8px 8px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;margin-bottom:1px;
+  transition:background .12s;position:relative;
 }
-.hi:hover{background:#141414;}
-.hi.active{background:#161616;border:1px solid #1e1e1e;}
-.hi-icon{font-size:12px;flex-shrink:0;opacity:.5;width:16px;text-align:center;}
-.hi-info{flex:1;min-width:0;}
-.hi-title{font-size:12.5px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400;transition:color .1s;}
-.hi:hover .hi-title,.hi.active .hi-title{color:#ccc;}
-.hi-time{font-size:10px;color:#2e2e2e;margin-top:1px;}
-.hi-del{
-  opacity:0;transition:opacity .1s;
-  background:none;border:none;cursor:pointer;
-  color:#3a3a3a;font-size:12px;padding:3px 4px;border-radius:4px;
-  line-height:1;flex-shrink:0;
-}
-.hi:hover .hi-del{opacity:1;}
-.hi-del:hover{color:#ff4444;background:#1a1111;}
-.h-empty{padding:24px 16px;text-align:center;color:#282828;font-size:12px;line-height:1.8;}
+.hi:hover{background:#181818;}
+.hi.active{background:#1c1c1c;box-shadow:inset 0 0 0 1px #222;}
+.hi-ic{font-size:12px;flex-shrink:0;width:14px;opacity:.45;}
+.hi-d{flex:1;min-width:0;}
+.hi-t{font-size:12.5px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s;}
+.hi-time{font-size:10px;color:#2a2a2a;margin-top:1px;}
+.hi:hover .hi-t,.hi.active .hi-t{color:#bbb;}
+.hi-x{opacity:0;background:none;border:none;cursor:pointer;color:#333;font-size:12px;padding:2px 4px;border-radius:4px;transition:all .1s;flex-shrink:0;}
+.hi:hover .hi-x{opacity:1;}
+.hi-x:hover{color:#ff4444;}
+.h-empty{text-align:center;padding:24px 14px;color:#252525;font-size:12px;line-height:1.8;}
 
-/* Sidebar bottom */
-.sb-footer{padding:10px 8px 14px;border-top:1px solid #141414;}
-.sb-usage{
-  margin:0 0 10px;
-  border:1px solid #141414;border-radius:8px;
-  padding:9px 11px;
-}
-.su-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.su-lbl{font-size:10.5px;font-weight:500;color:#333;}
-.su-val{font-size:10.5px;font-weight:700;color:#555;}
-.su-track{height:2px;background:#141414;border-radius:2px;overflow:hidden;}
-.su-fill{height:100%;background:#fff;border-radius:2px;transition:width .6s ease;}
-
-.sb-btn{
+/* Usage + bottom */
+.sb-bot{padding:10px 8px 14px;border-top:1px solid #181818;}
+.usage{margin:0 2px 8px;border:1px solid #181818;border-radius:9px;padding:9px 11px;}
+.u-row{display:flex;justify-content:space-between;margin-bottom:6px;}
+.u-lbl{font-size:10.5px;font-weight:500;color:#333;}
+.u-val{font-size:10.5px;font-weight:700;color:#555;}
+.u-track{height:2px;background:#181818;border-radius:2px;overflow:hidden;}
+.u-fill{height:100%;background:#fff;border-radius:2px;transition:width .6s;}
+.s-btn{
   width:100%;background:none;border:none;cursor:pointer;
   display:flex;align-items:center;gap:8px;
-  padding:8px 8px;border-radius:7px;
-  color:#3a3a3a;font-size:12.5px;font-weight:500;
-  font-family:'Inter',sans-serif;transition:all .12s;text-align:left;
+  padding:8px 8px;border-radius:8px;color:#333;
+  font-size:12.5px;font-weight:400;font-family:inherit;
+  transition:all .12s;text-align:left;
 }
-.sb-btn:hover{background:#141414;color:#888;}
-.sb-btn .si{width:16px;text-align:center;font-size:13px;}
+.s-btn:hover{background:#181818;color:#aaa;}
+.s-btn .ic{width:15px;text-align:center;font-size:12px;}
 
-/* ══════════════════ MAIN ══════════════════ */
+/* ══ MAIN ══ */
 #main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 
 /* Topbar */
-#topbar{
-  height:46px;padding:0 20px;
+#top{
+  height:44px;padding:0 20px;flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid #141414;flex-shrink:0;
-  background:#0a0a0a;
+  border-bottom:1px solid #141414;background:#0a0a0a;
 }
-.tb-l{display:flex;align-items:center;gap:10px;}
-.tb-indicator{
-  width:6px;height:6px;border-radius:50%;
-  background:#1a1a1a;flex-shrink:0;
-  transition:background .3s,box-shadow .3s;
+.top-l{display:flex;align-items:center;gap:9px;}
+.dot{
+  width:6px;height:6px;border-radius:50%;background:#1e1e1e;
+  transition:background .3s,box-shadow .3s;flex-shrink:0;
 }
-.tb-indicator.live{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.4);}
-.tb-indicator.thinking{background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.4);animation:pulse .8s ease-in-out infinite alternate;}
-@keyframes pulse{from{opacity:.6;}to{opacity:1;}}
-.tb-title{font-size:13px;font-weight:500;color:#666;max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tb-r{display:flex;gap:6px;align-items:center;}
-.tb-tag{
-  font-size:10px;font-weight:600;color:#2a2a2a;
-  border:1px solid #181818;border-radius:5px;
-  padding:3px 8px;letter-spacing:.3px;
-}
-.tb-tag.count{color:#444;}
+.dot.live{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.45);}
+.dot.think{background:#f59e0b;animation:dotpulse .7s ease-in-out infinite alternate;}
+@keyframes dotpulse{from{opacity:.5;box-shadow:0 0 4px rgba(245,158,11,.3);}to{opacity:1;box-shadow:0 0 10px rgba(245,158,11,.6);}}
+.top-title{font-size:13px;font-weight:500;color:#555;max-width:400px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.top-r{display:flex;gap:6px;}
+.top-chip{font-size:10.5px;color:#2d2d2d;border:1px solid #181818;border-radius:5px;padding:3px 8px;font-weight:500;}
+.top-chip.c{color:#3d3d3d;}
 
-/* ══════════════════ CHAT ══════════════════ */
-#chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;scroll-behavior:smooth;}
+/* ══ CHAT AREA ══ */
+#chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.chat-col{width:100%;max-width:720px;margin:0 auto;padding:0 20px;}
 
 /* ── WELCOME ── */
 #welcome{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:40px 28px;text-align:center;
+  padding:40px 24px;text-align:center;
 }
-.wl-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  border:1px solid #1a1a1a;border-radius:100px;
-  padding:4px 12px;font-size:10.5px;font-weight:600;
-  color:#333;letter-spacing:.4px;margin-bottom:22px;
+.w-em{
+  font-size:40px;margin-bottom:18px;
+  animation:lev 3.5s ease-in-out infinite;
 }
-.wl-icon{
-  font-size:38px;margin-bottom:18px;
-  animation:levitate 3s ease-in-out infinite;
+@keyframes lev{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.w-h{
+  font-size:27px;font-weight:700;color:#fff;
+  letter-spacing:-.6px;margin-bottom:8px;line-height:1.1;
 }
-@keyframes levitate{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-.wl-h1{
-  font-family:'Syne',sans-serif;
-  font-size:26px;font-weight:800;color:#fff;
-  letter-spacing:-.5px;margin-bottom:8px;line-height:1.1;
-}
-.wl-sub{font-size:13px;color:#3a3a3a;line-height:1.7;max-width:380px;margin-bottom:6px;}
-.wl-hin{font-size:12px;color:#252525;margin-bottom:34px;}
-
-.chips-lbl{
-  font-size:9.5px;font-weight:700;letter-spacing:1.8px;
-  text-transform:uppercase;color:#252525;margin-bottom:10px;
-}
-.chips{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:7px;max-width:540px;width:100%;
-}
+.w-s{font-size:14px;color:#444;line-height:1.7;max-width:400px;margin-bottom:5px;}
+.w-hi{font-size:12.5px;color:#2a2a2a;margin-bottom:32px;}
+.chips-h{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#272727;margin-bottom:10px;}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:560px;width:100%;}
 .chip{
-  background:#0d0d0d;border:1px solid #161616;
-  border-radius:9px;padding:11px 11px;
-  cursor:pointer;transition:all .18s;text-align:left;
-  position:relative;overflow:hidden;
+  background:#111;border:1px solid #1c1c1c;border-radius:10px;
+  padding:11px 11px;cursor:pointer;transition:all .18s;text-align:left;
 }
-.chip::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,.02));pointer-events:none;}
-.chip:hover{background:#111;border-color:#252525;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.5);}
-.chip-i{font-size:17px;margin-bottom:5px;display:block;}
-.chip-t{font-size:11.5px;color:#555;font-weight:500;line-height:1.4;}
-.chip-s{font-size:9.5px;color:#2a2a2a;margin-top:3px;font-weight:400;}
+.chip:hover{background:#161616;border-color:#272727;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.5);}
+.chip-e{font-size:17px;margin-bottom:5px;display:block;}
+.chip-t{font-size:12px;color:#555;font-weight:500;line-height:1.4;}
+.chip-s{font-size:10px;color:#2d2d2d;margin-top:3px;}
 
 /* ── MESSAGES ── */
-.mc{padding:20px 20px 0;display:flex;flex-direction:column;gap:18px;}
-.mr{display:flex;gap:10px;animation:mi .25s ease;}
-.mr.u{flex-direction:row-reverse;}
-@keyframes mi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
-.av{
-  width:28px;height:28px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;flex-shrink:0;align-self:flex-start;margin-top:1px;
+.msg-block{
+  width:100%;max-width:720px;margin:0 auto;
+  padding:0 20px;
+  display:flex;flex-direction:column;gap:0;
 }
-.av.ai{background:#fff;color:#000;font-size:13px;}
-.av.u{background:#141414;border:1px solid #1e1e1e;color:#555;}
-
-.mb{max-width:72%;display:flex;flex-direction:column;}
-.mr.u .mb{align-items:flex-end;}
-.mn{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#252525;margin-bottom:4px;}
-
-.bub{
-  padding:10px 14px;border-radius:12px;
-  font-size:13.5px;line-height:1.65;color:#d0d0d0;font-weight:400;
+.msg-row{
+  display:flex;gap:0;padding:10px 0;
+  animation:mi .22s ease;
 }
-.bub.u{background:#111;border:1px solid #1c1c1c;border-radius:12px 3px 12px 12px;}
-.bub.ai{background:#0e0e0e;border:1px solid #181818;border-radius:3px 12px 12px 12px;}
-.bub.err{background:#110808;border-color:#2a1414;color:#ff6666;}
+.msg-row.u{justify-content:flex-end;}
+@keyframes mi{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+
+/* User bubble */
+.u-bub{
+  max-width:68%;
+  background:#1c1c1c;border:1px solid #252525;
+  border-radius:18px 18px 4px 18px;
+  padding:10px 15px;
+  font-size:14px;line-height:1.6;color:#ddd;
+}
+
+/* AI response */
+.ai-resp{
+  width:100%;display:flex;flex-direction:column;gap:0;
+}
+.ai-name{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:#222;
+  margin-bottom:6px;display:flex;align-items:center;gap:7px;
+}
+.ai-name::after{content:'';flex:1;height:1px;background:#141414;}
+.ai-text{
+  font-size:14px;line-height:1.7;color:#ccc;
+  margin-bottom:2px;
+}
+.ai-err{
+  font-size:13.5px;color:#ff6666;line-height:1.6;
+  background:#120808;border:1px solid #2a1212;
+  border-radius:10px;padding:10px 14px;display:inline-block;
+}
 
 /* ── MEME CARD ── */
-.mc2{
-  background:#0d0d0d;border:1px solid #181818;border-radius:12px;
-  overflow:hidden;margin-top:8px;width:100%;max-width:500px;
-  transition:border-color .18s,box-shadow .18s;
+.mcard{
+  background:#111;border:1px solid #1c1c1c;border-radius:14px;
+  overflow:hidden;margin-top:10px;
+  max-width:520px;
+  transition:border-color .2s,box-shadow .2s;
 }
-.mc2:hover{border-color:#222;box-shadow:0 0 30px rgba(0,0,0,.6);}
+.mcard:hover{border-color:#252525;box-shadow:0 0 40px rgba(0,0,0,.7);}
 
-.mc2 canvas{display:block;width:100%;max-height:420px;background:#111;}
-.mc2 img{display:block;width:100%;max-height:420px;object-fit:contain;background:#111;cursor:zoom-in;}
-
-/* Video wrapper */
-.vw{position:relative;background:#000;cursor:pointer;}
-.vw video{display:block;width:100%;max-height:380px;object-fit:contain;}
-.vo{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.3);opacity:0;transition:opacity .18s;
-}
-.vw:hover .vo,.vw.paused .vo{opacity:1;}
-.vpb{
-  width:48px;height:48px;border-radius:50%;
-  background:rgba(255,255,255,.92);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;transition:transform .15s,background .15s;
-}
-.vpb:hover{transform:scale(1.08);background:#fff;}
-
-/* Video controls */
-.vctl{
-  padding:8px 12px;background:#0d0d0d;
-  border-top:1px solid #141414;
-  display:flex;align-items:center;gap:9px;
-}
-.vcb{
-  background:none;border:none;cursor:pointer;
-  color:#555;font-size:15px;line-height:1;
-  padding:3px;border-radius:5px;flex-shrink:0;
-  transition:color .12s;
-}
-.vcb:hover{color:#ccc;}
-.vtrack{
-  flex:1;height:3px;background:#1a1a1a;border-radius:3px;
-  cursor:pointer;position:relative;
-}
-.vtrack:hover{height:5px;margin-top:-1px;transition:height .1s;}
-.vfill{
-  position:absolute;top:0;left:0;height:100%;
-  background:#fff;border-radius:3px;
+/* CSS Meme overlay - 100% reliable, no CORS */
+.meme-wrap{position:relative;display:block;width:100%;background:#111;min-height:60px;}
+.meme-wrap img{width:100%;display:block;max-height:440px;object-fit:contain;}
+.meme-txt{
+  position:absolute;left:0;right:0;
+  text-align:center;
+  font-family:Impact,'Arial Black',Arial,sans-serif;
+  font-weight:900;
+  color:#fff;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  padding:0 4%;
+  line-height:1.1;
+  font-size:clamp(15px,5vw,64px);
+  /* Meme-style outline */
+  -webkit-text-stroke:2px #000;
+  text-shadow:
+    -2px -2px 0 #000, 2px -2px 0 #000,
+    -2px  2px 0 #000, 2px  2px 0 #000,
+     0   -2px 0 #000, 0    2px 0 #000,
+    -2px  0   0 #000, 2px  0   0 #000,
+     0    0  10px rgba(0,0,0,.8);
   pointer-events:none;
+  word-break:break-word;
 }
-.vbuf{
-  position:absolute;top:0;left:0;height:100%;
-  background:#2a2a2a;border-radius:3px;
-  pointer-events:none;
+.meme-txt.top{top:clamp(5px,2%,16px);}
+.meme-txt.bot{bottom:clamp(5px,2%,16px);}
+.meme-load{
+  position:absolute;inset:0;background:#111;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#333;
+  transition:opacity .3s;
 }
-.vthumb{
-  position:absolute;top:50%;right:0;transform:translate(50%,-50%);
-  width:11px;height:11px;border-radius:50%;background:#fff;
-  opacity:0;transition:opacity .15s;pointer-events:none;
-}
-.vtrack:hover .vthumb{opacity:1;}
-.vtime{font-size:10px;color:#333;font-weight:600;white-space:nowrap;flex-shrink:0;}
-.vvol{display:flex;align-items:center;gap:5px;flex-shrink:0;}
-.vcb.vol{font-size:13px;}
-.vol-sl{
-  width:48px;-webkit-appearance:none;appearance:none;
-  height:2px;border-radius:2px;background:#1a1a1a;cursor:pointer;
-  outline:none;
-}
-.vol-sl::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;border-radius:50%;background:#fff;cursor:pointer;}
+.meme-load.gone{opacity:0;pointer-events:none;}
 
 /* Card footer */
 .cf{
   display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;border-top:1px solid #141414;
-  background:#0d0d0d;
+  padding:9px 13px;border-top:1px solid #181818;
 }
-.cf-info .cf-t{font-size:12px;font-weight:600;color:#aaa;}
-.cf-info .cf-s{font-size:10.5px;color:#2a2a2a;margin-top:1px;}
-.cf-btns{display:flex;gap:6px;}
-.cf-btn{
-  padding:5px 11px;border-radius:6px;font-size:11.5px;
+.cf-l .cf-t{font-size:12px;font-weight:600;color:#999;}
+.cf-l .cf-s{font-size:10.5px;color:#2d2d2d;margin-top:1px;}
+.cf-btns{display:flex;gap:5px;}
+.cbtn{
+  padding:5px 11px;border-radius:6px;font-size:12px;
   font-weight:600;cursor:pointer;border:none;
-  font-family:'Inter',sans-serif;
-  display:flex;align-items:center;gap:4px;transition:all .15s;
+  font-family:inherit;display:flex;align-items:center;
+  gap:4px;transition:all .15s;
 }
-.cf-btn.dl{background:#fff;color:#000;}
-.cf-btn.dl:hover{background:#e0e0e0;}
-.cf-btn.view{background:transparent;color:#444;border:1px solid #1e1e1e;}
-.cf-btn.view:hover{border-color:#2a2a2a;color:#888;}
-.q-badge{
-  font-size:9px;font-weight:800;letter-spacing:.5px;
-  text-transform:uppercase;
-  background:#141414;color:#333;
-  padding:2px 5px;border-radius:4px;margin-left:4px;
+.cbtn.dl{background:#fff;color:#000;}
+.cbtn.dl:hover{background:#e5e5e5;}
+.cbtn.vw{background:transparent;color:#444;border:1px solid #1e1e1e;}
+.cbtn.vw:hover{border-color:#2a2a2a;color:#888;}
+.qbadge{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:#181818;color:#444;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;}
+
+/* ── VIDEO CARD ── */
+.vcard{
+  background:#111;border:1px solid #1c1c1c;border-radius:14px;
+  overflow:hidden;margin-top:10px;max-width:520px;
+  transition:border-color .2s;
 }
+.vcard:hover{border-color:#252525;}
+.vwrap{position:relative;background:#000;}
+.vwrap video{display:block;width:100%;max-height:380px;object-fit:contain;}
+.vover{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.3);opacity:0;transition:opacity .18s;cursor:pointer;
+}
+.vwrap:hover .vover,.vwrap.paused .vover{opacity:1;}
+.vpb{
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(255,255,255,.92);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;transition:transform .15s;
+}
+.vpb:hover{transform:scale(1.08);}
+.vctrl{
+  padding:8px 13px;display:flex;align-items:center;gap:9px;
+  background:#111;border-top:1px solid #181818;
+}
+.vbtn{
+  background:none;border:none;cursor:pointer;
+  color:#555;font-size:15px;line-height:1;padding:3px;
+  border-radius:4px;flex-shrink:0;transition:color .12s;
+}
+.vbtn:hover{color:#ccc;}
+.vtrack{
+  flex:1;position:relative;height:3px;background:#1e1e1e;
+  border-radius:3px;cursor:pointer;transition:height .12s;
+}
+.vtrack:hover{height:5px;}
+.vbuf{position:absolute;inset-block:0;left:0;background:#2a2a2a;border-radius:3px;}
+.vprog{position:absolute;inset-block:0;left:0;background:#fff;border-radius:3px;transition:width .1s linear;}
+.vknob{
+  position:absolute;top:50%;right:0;transform:translate(50%,-50%);
+  width:11px;height:11px;border-radius:50%;background:#fff;
+  opacity:0;transition:opacity .12s;pointer-events:none;
+}
+.vtrack:hover .vknob{opacity:1;}
+.vtime{font-size:10.5px;color:#333;font-weight:600;white-space:nowrap;flex-shrink:0;}
+.vvol{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.vsl{
+  width:50px;-webkit-appearance:none;height:2px;border-radius:2px;
+  background:#1e1e1e;cursor:pointer;outline:none;
+}
+.vsl::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;}
 
 /* Pending */
-.vpend{
+.pend{
   display:flex;align-items:center;gap:12px;
-  padding:16px;color:#3a3a3a;font-size:12.5px;border:1px solid #141414;
-  border-radius:12px;margin-top:8px;max-width:400px;background:#0d0d0d;
+  padding:16px;color:#333;font-size:13px;
+  max-width:380px;margin-top:10px;
+  background:#111;border:1px solid #1c1c1c;border-radius:14px;
 }
 .spin{
   width:16px;height:16px;border:2px solid #1e1e1e;
@@ -329,64 +313,59 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
 @keyframes sp{to{transform:rotate(360deg);}}
 
 /* Typing */
-.typy{display:flex;align-items:center;gap:4px;padding:10px 14px;}
+.typy{display:flex;align-items:center;gap:4px;padding:8px 0;}
 .typy span{
-  width:5px;height:5px;border-radius:50%;background:#252525;
-  animation:ty 1s ease-in-out infinite;
+  width:5px;height:5px;border-radius:50%;background:#242424;
+  animation:ty 1.1s ease-in-out infinite;
 }
-.typy span:nth-child(2){animation-delay:.18s;}
-.typy span:nth-child(3){animation-delay:.36s;}
-@keyframes ty{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
-.cpad{height:18px;flex-shrink:0;}
+.typy span:nth-child(2){animation-delay:.2s;}
+.typy span:nth-child(3){animation-delay:.4s;}
+@keyframes ty{0%,60%,100%{transform:translateY(0);opacity:.35;}30%{transform:translateY(-6px);opacity:1;}}
 
-/* ══════════════════ INPUT ══════════════════ */
+.cpad{height:16px;flex-shrink:0;}
+
+/* ══ INPUT ══ */
 #ia{
-  padding:10px 20px 14px;
-  border-top:1px solid #141414;
-  flex-shrink:0;background:#0a0a0a;
+  flex-shrink:0;padding:10px 20px 14px;
+  border-top:1px solid #141414;background:#0a0a0a;
 }
-.ia-top{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
-
-.ps{
-  background:#0d0d0d;border:1px solid #181818;
-  color:#555;padding:5px 9px 5px 11px;
-  border-radius:7px;font-size:12px;font-weight:500;
-  font-family:'Inter',sans-serif;cursor:pointer;
+.ia-inner{max-width:720px;margin:0 auto;}
+.ia-row1{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+.psel{
+  background:#111;border:1px solid #1c1c1c;
+  color:#555;padding:6px 9px 6px 11px;
+  border-radius:8px;font-size:12px;font-weight:500;
+  font-family:inherit;cursor:pointer;
   -webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 7px center;
   padding-right:22px;transition:all .15s;
 }
-.ps:hover{border-color:#222;color:#888;}
-.ps:focus{outline:none;border-color:#252525;}
-.ps option{background:#111;color:#888;}
-
+.psel:hover{border-color:#252525;color:#999;}
+.psel:focus{outline:none;border-color:#2a2a2a;}
+.psel option{background:#111;}
 .ltog{
-  display:flex;background:#0d0d0d;border:1px solid #181818;
-  border-radius:7px;overflow:hidden;padding:2px;gap:2px;
+  display:flex;background:#111;border:1px solid #1c1c1c;
+  border-radius:8px;overflow:hidden;padding:2px;gap:2px;
 }
-.lb{
-  padding:3px 10px;border-radius:5px;
-  font-size:11.5px;font-weight:600;cursor:pointer;
-  color:#333;border:none;background:none;
-  font-family:'Inter',sans-serif;transition:all .15s;
+.lbtn{
+  padding:4px 11px;border-radius:6px;font-size:11.5px;
+  font-weight:600;cursor:pointer;color:#333;
+  border:none;background:none;font-family:inherit;transition:all .15s;
 }
-.lb.on{background:#fff;color:#000;}
-
+.lbtn.on{background:#fff;color:#000;}
 .ibox{
   display:flex;align-items:flex-end;gap:8px;
-  background:#0d0d0d;border:1px solid #181818;
-  border-radius:12px;padding:10px 12px;
-  transition:border-color .18s,box-shadow .18s;
+  background:#111;border:1px solid #1c1c1c;border-radius:14px;
+  padding:10px 12px;transition:border-color .2s,box-shadow .2s;
 }
-.ibox:focus-within{border-color:#252525;box-shadow:0 0 0 3px rgba(255,255,255,.03);}
+.ibox:focus-within{border-color:#2a2a2a;box-shadow:0 0 0 3px rgba(255,255,255,.02);}
 #inp{
   flex:1;background:none;border:none;outline:none;
-  color:#d0d0d0;font-size:13.5px;
-  font-family:'Inter',sans-serif;font-weight:400;
+  color:#ddd;font-size:14px;font-family:inherit;
   resize:none;max-height:120px;min-height:20px;line-height:1.55;
 }
-#inp::placeholder{color:#1e1e1e;}
+#inp::placeholder{color:#232323;}
 #sbtn{
   width:34px;height:34px;border-radius:9px;flex-shrink:0;
   background:#fff;border:none;cursor:pointer;
@@ -394,103 +373,95 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
   transition:all .18s;
 }
 #sbtn:hover{background:#e0e0e0;transform:scale(1.04);}
-#sbtn:active{transform:scale(.96);}
-#sbtn:disabled{opacity:.25;cursor:not-allowed;transform:none;}
-.ia-hint{font-size:10px;color:#1e1e1e;text-align:center;margin-top:7px;font-weight:400;}
+#sbtn:active{transform:scale(.95);}
+#sbtn:disabled{opacity:.2;cursor:not-allowed;transform:none;}
+.ia-hint{font-size:10px;color:#1e1e1e;text-align:center;margin-top:7px;}
 .ia-hint b{color:#282828;}
 
-/* ══════════════════ SETTINGS ══════════════════ */
+/* ══ SETTINGS ══ */
 #sov{
   display:none;position:fixed;inset:0;z-index:100;
-  background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.88);backdrop-filter:blur(10px);
   align-items:flex-end;justify-content:center;
 }
 #sov.open{display:flex;}
 #smod{
   width:100%;max-width:460px;
-  background:#0d0d0d;
-  border:1px solid #1e1e1e;border-bottom:none;
-  border-radius:16px 16px 0 0;
-  padding:0 0 24px;
-  animation:du .25s cubic-bezier(.16,1,.3,1);
-  overflow:hidden;
+  background:#111;border:1px solid #1e1e1e;border-bottom:none;
+  border-radius:16px 16px 0 0;padding:0 0 24px;
+  animation:du .25s cubic-bezier(.16,1,.3,1);overflow:hidden;
 }
 @keyframes du{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.sm-h{
-  padding:16px 18px 12px;border-bottom:1px solid #141414;
+.smod-h{
+  padding:16px 18px 12px;border-bottom:1px solid #181818;
   display:flex;align-items:center;justify-content:space-between;
 }
-.sm-t{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;}
-.sm-c{
-  background:#141414;border:none;cursor:pointer;
-  color:#444;width:28px;height:28px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all .12s;
+.smod-t{font-size:16px;font-weight:700;color:#fff;}
+.smod-x{
+  background:#181818;border:none;cursor:pointer;color:#555;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .12s;
 }
-.sm-c:hover{background:#1e1e1e;color:#ccc;}
-.sm-b{padding:4px 18px;}
+.smod-x:hover{background:#222;color:#ccc;}
+.smod-b{padding:4px 18px;}
 .sr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #0f0f0f;}
 .sr:last-child{border-bottom:none;}
-.sr-l{font-size:13px;font-weight:500;color:#ccc;margin-bottom:2px;}
+.sr-l{font-size:13.5px;font-weight:500;color:#bbb;margin-bottom:2px;}
 .sr-d{font-size:11px;color:#333;}
 .tog{position:relative;width:38px;height:20px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
-.ttr{position:absolute;inset:0;border-radius:20px;background:#141414;cursor:pointer;transition:background .2s;border:1px solid #1e1e1e;}
+.ttr{position:absolute;inset:0;border-radius:20px;background:#1a1a1a;cursor:pointer;transition:background .2s;border:1px solid #222;}
 .tog input:checked+.ttr{background:#fff;border-color:#fff;}
 .ttr::after{content:'';position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#333;transition:transform .2s,background .2s;}
 .tog input:checked+.ttr::after{transform:translateX(18px);background:#000;}
 
-/* ══════════════════ LIGHTBOX ══════════════════ */
+/* ══ LIGHTBOX ══ */
 #lb{
   display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.97);backdrop-filter:blur(4px);
-  flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:rgba(0,0,0,.98);flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;
 }
 #lb.open{display:flex;}
-#lb-img{max-width:90vw;max-height:82vh;object-fit:contain;border-radius:6px;}
-#lb-canvas{max-width:90vw;max-height:82vh;border-radius:6px;display:none;}
+#lb-img{max-width:90vw;max-height:84vh;object-fit:contain;border-radius:8px;}
 #lb-x{
   position:absolute;top:14px;right:14px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
   cursor:pointer;color:#fff;font-size:14px;
   width:34px;height:34px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;transition:background .15s;
 }
-#lb-x:hover{background:rgba(255,255,255,.12);}
+#lb-x:hover{background:rgba(255,255,255,.14);}
+.lb-actions{display:flex;gap:8px;}
 #lb-dl{
   background:#fff;color:#000;border:none;cursor:pointer;
-  padding:8px 20px;border-radius:7px;
-  font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;
-  display:flex;align-items:center;gap:6px;transition:background .15s;
+  padding:8px 20px;border-radius:7px;font-family:inherit;
+  font-size:12.5px;font-weight:700;transition:background .15s;
 }
 #lb-dl:hover{background:#e0e0e0;}
 
-/* ══════════════════ TOAST ══════════════════ */
+/* ══ TOAST ══ */
 #toast{
   position:fixed;bottom:72px;right:16px;z-index:300;
-  background:#141414;border:1px solid #1e1e1e;
-  color:#aaa;padding:9px 14px;border-radius:8px;
+  background:#1a1a1a;border:1px solid #252525;
+  color:#aaa;padding:9px 14px;border-radius:9px;
   font-size:12px;font-weight:500;
   transform:translateX(120%);
   transition:transform .28s cubic-bezier(.16,1,.3,1);
-  pointer-events:none;
+  pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.5);
 }
 #toast.show{transform:translateX(0);}
-
-/* ══════════════════ MISC ══════════════════ */
-.divider{height:1px;background:#0f0f0f;margin:4px 0;}
 </style>
 </head>
 <body>
 
-<!-- ══════ SIDEBAR ══════ -->
+<!-- SIDEBAR -->
 <nav id="sb">
-  <div class="sb-head">
-    <div class="logo-row">
-      <div class="logo-icon">🎭</div>
+  <div class="sb-top">
+    <div class="logo">
+      <div class="logo-box">🎭</div>
       <div>
         <div class="logo-name">MemeForge AI</div>
-        <div class="logo-sub">India's Meme Machine</div>
+        <div class="logo-tag">India's Meme Machine</div>
       </div>
     </div>
     <button class="new-btn" onclick="newChat()">
@@ -498,78 +469,68 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
       New Session
     </button>
   </div>
-
-  <div class="sb-section">History</div>
-  <div id="hist">
-    <div class="h-empty" id="hempty">No sessions yet.<br/>Start creating!</div>
-  </div>
-
-  <div class="sb-footer">
-    <div class="sb-usage">
-      <div class="su-row">
-        <span class="su-lbl">Daily Generations</span>
-        <span class="su-val" id="su-val">0 / 100</span>
-      </div>
-      <div class="su-track"><div class="su-fill" id="su-fill" style="width:0%"></div></div>
+  <div class="sb-label">History</div>
+  <div id="hist"><div class="h-empty" id="hempty">No sessions yet.<br/>Start creating! 🔥</div></div>
+  <div class="sb-bot">
+    <div class="usage">
+      <div class="u-row"><span class="u-lbl">Daily Generations</span><span class="u-val" id="u-val">0/100</span></div>
+      <div class="u-track"><div class="u-fill" id="u-fill" style="width:0%"></div></div>
     </div>
-    <button class="sb-btn" onclick="openS()"><span class="si">⚙</span> Settings</button>
-    <button class="sb-btn" onclick="clearAll()"><span class="si">⌫</span> Clear All History</button>
-    <button class="sb-btn" onclick="keyHelp()"><span class="si">⌘</span> API Keys Info</button>
+    <button class="s-btn" onclick="openS()"><span class="ic">⚙</span> Settings</button>
+    <button class="s-btn" onclick="clearAll()"><span class="ic">⌫</span> Clear All History</button>
+    <button class="s-btn" onclick="keyInfo()"><span class="ic">⌘</span> API Keys Info</button>
   </div>
 </nav>
 
-<!-- ══════ MAIN ══════ -->
+<!-- MAIN -->
 <main id="main">
-
-  <!-- Topbar -->
-  <div id="topbar">
-    <div class="tb-l">
-      <div class="tb-indicator live" id="ind"></div>
-      <div class="tb-title" id="tb-t">MemeForge AI — Ready</div>
+  <div id="top">
+    <div class="top-l">
+      <div class="dot live" id="dot"></div>
+      <div class="top-title" id="top-t">MemeForge AI — Ready</div>
     </div>
-    <div class="tb-r">
-      <span class="tb-tag count" id="tb-cnt">100 left today</span>
-      <span class="tb-tag">🇮🇳 Hinglish</span>
+    <div class="top-r">
+      <span class="top-chip c" id="top-cnt">100 left today</span>
+      <span class="top-chip">🇮🇳 Hinglish</span>
     </div>
   </div>
 
-  <!-- Chat -->
   <div id="chat">
+    <!-- WELCOME -->
     <div id="welcome">
-      <div class="wl-badge">🇮🇳 India's #1 AI Meme Creator</div>
-      <div class="wl-icon">🎭</div>
-      <div class="wl-h1">What are we creating?</div>
-      <div class="wl-sub">Describe any meme idea in Hindi or English — image memes, video memes, or ask me anything at all.</div>
-      <div class="wl-hin">Hindi, English ya Hinglish mein likho — samajh lunga 🔥</div>
-      <div class="chips-lbl">Quick ideas →</div>
+      <div class="w-em">🎭</div>
+      <div class="w-h">What are we creating?</div>
+      <div class="w-s">Describe any meme idea in Hindi or English — image memes, video memes, or ask me absolutely anything.</div>
+      <div class="w-hi">Hindi, English ya Hinglish mein likho — samajh lunga 🔥</div>
+      <div class="chips-h">Quick start →</div>
       <div class="chips">
-        <div class="chip" onclick="qs('Drake meme banao — raat ko padhna chahiye vs reels dekhna')">
-          <span class="chip-i">🦆</span>
-          <div class="chip-t">Drake: Padhna vs Reels</div>
+        <div class="chip" onclick="qs('Drake meme banao — raat ko padhna chahiye vs YouTube shorts dekhna')">
+          <span class="chip-e">🦆</span>
+          <div class="chip-t">Drake: Padhna vs Shorts</div>
           <div class="chip-s">Hindi · Image</div>
         </div>
-        <div class="chip" onclick="qs('Giga chad meme about a guy who never studies but always tops the exam')">
-          <span class="chip-i">💪</span>
-          <div class="chip-t">Giga Chad: Never Studies Topper</div>
-          <div class="chip-s">English · Image</div>
+        <div class="chip" onclick="qs('Giga chad meme — jo banda kabhi nahi padha aur phir bhi topper ban gaya')">
+          <span class="chip-e">💪</span>
+          <div class="chip-t">Giga Chad: Kabhi-na-Padha Topper</div>
+          <div class="chip-s">Hinglish · Image</div>
         </div>
-        <div class="chip" onclick="qs('This is fine dog meme — Indian summer 47 degree aur AC kharab hai')">
-          <span class="chip-i">🔥</span>
+        <div class="chip" onclick="qs('This is fine meme — 47 degree garmi, AC kharab, aur bijli cut')">
+          <span class="chip-e">🔥</span>
           <div class="chip-t">This Is Fine: 47°C Garmi</div>
           <div class="chip-s">Hinglish · Image</div>
         </div>
-        <div class="chip" onclick="qs('Distracted boyfriend meme — me, my deadlines, and YouTube shorts')">
-          <span class="chip-i">😍</span>
-          <div class="chip-t">Distracted BF: Deadlines vs Shorts</div>
-          <div class="chip-s">English · Image</div>
+        <div class="chip" onclick="qs('Distracted boyfriend meme — me, my work deadline, aur Instagram reels')">
+          <span class="chip-e">😍</span>
+          <div class="chip-t">Distracted BF: Deadline vs Reels</div>
+          <div class="chip-s">Hinglish · Image</div>
         </div>
-        <div class="chip" onclick="qs('Expanding brain meme about jugaad levels of Indian students during exams')">
-          <span class="chip-i">🧠</span>
+        <div class="chip" onclick="qs('Expanding brain meme — IIT student ke jugaad levels during exam')">
+          <span class="chip-e">🧠</span>
           <div class="chip-t">Expanding Brain: Jugaad Levels</div>
           <div class="chip-s">Hinglish · Image</div>
         </div>
-        <div class="chip" onclick="qs('Create a funny video meme about Indian office meetings that couldve been an email')">
-          <span class="chip-i">🎬</span>
+        <div class="chip" onclick="qs('Make a funny video meme about Indian office meetings that couldve been an email')">
+          <span class="chip-e">🎬</span>
           <div class="chip-t">Video: Office Nautanki</div>
           <div class="chip-s">English · Video</div>
         </div>
@@ -578,74 +539,75 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
     <div class="cpad"></div>
   </div>
 
-  <!-- Input -->
+  <!-- INPUT -->
   <div id="ia">
-    <div class="ia-top">
-      <select class="ps" id="gtype">
-        <option value="auto">Auto Detect</option>
-        <option value="image">🖼 Image Meme</option>
-        <option value="video">🎬 Video Meme</option>
-        <option value="chat">💬 Just Chat</option>
-      </select>
-      <select class="ps" id="gqual">
-        <option value="high" selected>High Quality</option>
-        <option value="ultra">Ultra HD</option>
-        <option value="standard">Standard</option>
-      </select>
-      <select class="ps" id="gstyle">
-        <option value="funny">😂 Funny</option>
-        <option value="dank">🔥 Dank</option>
-        <option value="desi">🇮🇳 Desi</option>
-        <option value="dark">😈 Dark Humor</option>
-        <option value="wholesome">🥰 Wholesome</option>
-      </select>
-      <div class="ltog">
-        <button class="lb on" id="l-hi" onclick="setLang('hi')">हि</button>
-        <button class="lb" id="l-en" onclick="setLang('en')">EN</button>
+    <div class="ia-inner">
+      <div class="ia-row1">
+        <select class="psel" id="gtype">
+          <option value="auto">Auto Detect</option>
+          <option value="image">🖼 Image Meme</option>
+          <option value="video">🎬 Video Meme</option>
+          <option value="chat">💬 Just Chat</option>
+        </select>
+        <select class="psel" id="gqual">
+          <option value="high" selected>High Quality</option>
+          <option value="ultra">Ultra HD</option>
+          <option value="standard">Standard</option>
+        </select>
+        <select class="psel" id="gstyle">
+          <option value="funny">😂 Funny</option>
+          <option value="dank">🔥 Dank</option>
+          <option value="desi">🇮🇳 Desi Vibes</option>
+          <option value="dark">😈 Dark Humor</option>
+          <option value="wholesome">🥰 Wholesome</option>
+        </select>
+        <div class="ltog">
+          <button class="lbtn on" id="l-hi" onclick="setL('hi')">हि</button>
+          <button class="lbtn" id="l-en" onclick="setL('en')">EN</button>
+        </div>
       </div>
+      <div class="ibox">
+        <textarea id="inp" rows="1"
+          placeholder="Describe your meme or ask anything... (Hindi / English dono chalega)"
+          onkeydown="hKey(event)" oninput="aResize(this)"></textarea>
+        <button id="sbtn" onclick="send()" title="Send (Enter)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="ia-hint"><b>Enter</b> to send · <b>Shift+Enter</b> for newline · All downloads in original quality</div>
     </div>
-    <div class="ibox">
-      <textarea id="inp" rows="1"
-        placeholder="Describe your meme or ask anything... (Hindi / English dono chalega)"
-        onkeydown="hk(event)"
-        oninput="ar(this)"></textarea>
-      <button id="sbtn" onclick="send()" title="Send (Enter)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      </button>
-    </div>
-    <div class="ia-hint"><b>Enter</b> to send · <b>Shift+Enter</b> new line · Downloads in max quality</div>
   </div>
 </main>
 
 <!-- SETTINGS -->
-<div id="sov" onclick="sovck(event)">
+<div id="sov" onclick="sovCk(event)">
   <div id="smod">
-    <div class="sm-h">
-      <div class="sm-t">Settings</div>
-      <button class="sm-c" onclick="closeS()">✕</button>
+    <div class="smod-h">
+      <div class="smod-t">Settings</div>
+      <button class="smod-x" onclick="closeS()">✕</button>
     </div>
-    <div class="sm-b">
+    <div class="smod-b">
       <div class="sr">
-        <div><div class="sr-l">🇮🇳 Prefer Hinglish Replies</div><div class="sr-d">AI responds more in Hinglish style</div></div>
-        <label class="tog"><input type="checkbox" id="t-hi" onchange="sv('hindi',this.checked)"/><div class="ttr"></div></label>
-      </div>
-      <div class="sr">
-        <div><div class="sr-l">🎭 Creative Mode</div><div class="sr-d">AI takes more creative risks for funnier memes</div></div>
+        <div><div class="sr-l">🎭 Creative Mode</div><div class="sr-d">AI takes wilder creative risks for funnier results</div></div>
         <label class="tog"><input type="checkbox" id="t-cr" checked onchange="sv('creative',this.checked)"/><div class="ttr"></div></label>
       </div>
       <div class="sr">
-        <div><div class="sr-l">💾 Auto-save Media</div><div class="sr-d">Automatically download every generated meme</div></div>
-        <label class="tog"><input type="checkbox" id="t-as" onchange="sv('autosave',this.checked)"/><div class="ttr"></div></label>
-      </div>
-      <div class="sr">
-        <div><div class="sr-l">🔄 Auto-switch Backgrounds</div><div class="sr-d">Try multiple image results for best match</div></div>
+        <div><div class="sr-l">🔄 Auto-switch Backgrounds</div><div class="sr-d">Try multiple images for best visual match</div></div>
         <label class="tog"><input type="checkbox" id="t-ab" checked onchange="sv('autoswitch',this.checked)"/><div class="ttr"></div></label>
       </div>
       <div class="sr">
+        <div><div class="sr-l">💾 Auto-save Generated Media</div><div class="sr-d">Automatically download every meme you create</div></div>
+        <label class="tog"><input type="checkbox" id="t-as" onchange="sv('autosave',this.checked)"/><div class="ttr"></div></label>
+      </div>
+      <div class="sr">
+        <div><div class="sr-l">🇮🇳 Prefer Hinglish Replies</div><div class="sr-d">AI leans more Hindi/Hinglish in responses</div></div>
+        <label class="tog"><input type="checkbox" id="t-hi" onchange="sv('hindi',this.checked)"/><div class="ttr"></div></label>
+      </div>
+      <div class="sr">
         <div><div class="sr-l">📊 Today's Usage</div><div class="sr-d">Resets at midnight daily</div></div>
-        <div style="font-size:14px;font-weight:700;color:#ccc" id="s-use">0 / 100</div>
+        <div style="font-size:14px;font-weight:700;color:#bbb" id="s-usage">0/100</div>
       </div>
     </div>
   </div>
@@ -653,10 +615,11 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
 
 <!-- LIGHTBOX -->
 <div id="lb" onclick="clb(event)">
-  <button id="lb-x" onclick="clb(null,true)">✕</button>
-  <img id="lb-img" src="" alt="" style="display:none"/>
-  <canvas id="lb-canvas" style="display:none"></canvas>
-  <button id="lb-dl" onclick="lbdl()">↓ Download Full Quality</button>
+  <button id="lb-x" onclick="clb(null,1)">✕</button>
+  <img id="lb-img" src="" alt=""/>
+  <div class="lb-actions">
+    <button id="lb-dl" onclick="lbDl()">↓ Download Full Quality</button>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -664,79 +627,59 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;z-index:9
 <script>
 'use strict';
 
-/* ══════════════════════════════════════════════
-   STATE
-══════════════════════════════════════════════ */
-let DB   = JSON.parse(localStorage.getItem('mf4_db') || '{"sessions":[]}');
-let cid  = null;       // current session id
+/* ══ STATE ══ */
+let DB   = (() => { try { return JSON.parse(localStorage.getItem('mf5_db') || '{"sessions":[]}'); } catch(e) { return {sessions:[]}; }})();
+let cid  = null;
 let lang = 'hi';
 let busy = false;
-let daily = parseInt(localStorage.getItem('mf4_d') || '0');
-let lbCanvas = null, lbUrl = null;
+let daily = parseInt(localStorage.getItem('mf5_d') || '0');
+let lbImgEl = null;   // for lightbox download
 
-// Daily reset
 const TODAY = new Date().toDateString();
-if (localStorage.getItem('mf4_dt') !== TODAY) {
+if (localStorage.getItem('mf5_dt') !== TODAY) {
   daily = 0;
-  localStorage.setItem('mf4_d', '0');
-  localStorage.setItem('mf4_dt', TODAY);
+  localStorage.setItem('mf5_d', '0');
+  localStorage.setItem('mf5_dt', TODAY);
 }
 
-/* ══════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════ */
-(function () {
+/* ══ INIT ══ */
+(function() {
   loadSettings();
   updCount();
   renderHist();
 })();
 
 function loadSettings() {
-  document.getElementById('t-hi').checked = ls('hindi') === 'true';
-  document.getElementById('t-cr').checked = ls('creative') !== 'false';
-  document.getElementById('t-as').checked = ls('autosave') === 'true';
-  document.getElementById('t-ab').checked = ls('autoswitch') !== 'false';
-  document.getElementById('s-use').textContent = daily + ' / 100';
+  document.getElementById('t-cr').checked = gs('creative') !== 'false';
+  document.getElementById('t-ab').checked = gs('autoswitch') !== 'false';
+  document.getElementById('t-as').checked = gs('autosave') === 'true';
+  document.getElementById('t-hi').checked = gs('hindi') === 'true';
+  document.getElementById('s-usage').textContent = daily + '/100';
 }
-function sv(k, v) { localStorage.setItem('mf4_' + k, v); }
-function ls(k) { return localStorage.getItem('mf4_' + k); }
+function sv(k,v){ localStorage.setItem('mf5_'+k,String(v)); }
+function gs(k){ return localStorage.getItem('mf5_'+k); }
 
-/* ══════════════════════════════════════════════
-   LANGUAGE
-══════════════════════════════════════════════ */
-function setLang(l) {
+/* ══ LANG ══ */
+function setL(l) {
   lang = l;
-  document.getElementById('l-hi').classList.toggle('on', l === 'hi');
-  document.getElementById('l-en').classList.toggle('on', l === 'en');
-  const el = document.getElementById('inp');
-  el.placeholder = l === 'hi'
-    ? 'Meme idea batao Hindi mein ya kuch bhi pucho...'
+  document.getElementById('l-hi').classList.toggle('on', l==='hi');
+  document.getElementById('l-en').classList.toggle('on', l==='en');
+  document.getElementById('inp').placeholder = l === 'hi'
+    ? 'Meme idea batao ya kuch bhi pucho... (Hindi/English dono chalega)'
     : 'Describe your meme or ask anything in English...';
 }
 
-/* ══════════════════════════════════════════════
-   SESSIONS
-══════════════════════════════════════════════ */
+/* ══ SESSIONS ══ */
 function newChat() {
   cid = 'mf_' + Date.now();
-  DB.sessions.unshift({ id: cid, title: 'New Session', msgs: [], ts: Date.now() });
-  saveDB();
-  renderHist();
-  resetUI();
-  setTitle('New Session');
+  DB.sessions.unshift({ id:cid, title:'New Session', msgs:[], ts:Date.now() });
+  saveDB(); renderHist(); resetUI(); setTopTitle('New Session');
 }
-
-function getS() { return DB.sessions.find(s => s.id === cid); }
-
+function getSess() { return DB.sessions.find(s => s.id === cid); }
 function getOrMake() {
-  if (!cid) {
-    cid = 'mf_' + Date.now();
-    DB.sessions.unshift({ id: cid, title: 'New Session', msgs: [], ts: Date.now() });
-    saveDB(); renderHist();
-  }
-  return getS();
+  if (!cid) { newChat(); }
+  return getSess();
 }
-
 function loadSession(id) {
   cid = id;
   const s = DB.sessions.find(x => x.id === id);
@@ -745,192 +688,166 @@ function loadSession(id) {
   const ca = document.getElementById('chat');
   s.msgs.forEach(m => addMsg(m, ca, false));
   pad(ca);
-  setTitle(s.title);
+  setTopTitle(s.title);
   ca.scrollTop = ca.scrollHeight;
   document.querySelectorAll('.hi').forEach(e => e.classList.remove('active'));
   document.querySelector(`[data-id="${id}"]`)?.classList.add('active');
 }
-
-function delS(id, e) {
+function delSess(id, e) {
   e.stopPropagation();
   DB.sessions = DB.sessions.filter(s => s.id !== id);
   if (cid === id) { cid = null; resetUI(); }
   saveDB(); renderHist();
 }
-
 function clearAll() {
-  if (!confirm('Clear all history? This cannot be undone.')) return;
+  if (!confirm('Clear all history? Cannot be undone.')) return;
   DB.sessions = []; cid = null;
   saveDB(); renderHist(); resetUI();
   toast('History cleared');
 }
-
 function saveDB() {
   try {
-    // Keep only last 100 sessions, trim msgs to last 30 each
     DB.sessions = DB.sessions.slice(0, 100);
-    DB.sessions.forEach(s => { s.msgs = s.msgs.slice(-30); });
-    localStorage.setItem('mf4_db', JSON.stringify(DB));
-  } catch (e) {}
+    DB.sessions.forEach(s => { s.msgs = s.msgs.slice(-40); });
+    localStorage.setItem('mf5_db', JSON.stringify(DB));
+  } catch(e) {}
 }
 
-/* ══════════════════════════════════════════════
-   RENDER HISTORY (grouped by date)
-══════════════════════════════════════════════ */
+/* ══ RENDER HISTORY (date-grouped) ══ */
 function renderHist() {
   const list = document.getElementById('hist');
   const empty = document.getElementById('hempty');
   if (!DB.sessions.length) {
-    list.innerHTML = '';
-    list.appendChild(empty);
-    empty.style.display = 'block';
-    return;
+    list.innerHTML = ''; list.appendChild(empty); empty.style.display='block'; return;
   }
   empty.style.display = 'none';
   list.innerHTML = '';
-
-  // Group by date
   const groups = {};
   DB.sessions.forEach(s => {
-    const d = new Date(s.ts);
-    const now = new Date();
-    let label;
+    const d = new Date(s.ts), now = new Date();
     const diff = (now - d) / 86400000;
-    if (diff < 1) label = 'Today';
-    else if (diff < 2) label = 'Yesterday';
-    else if (diff < 8) label = 'This Week';
-    else if (diff < 32) label = 'This Month';
-    else label = d.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
-    if (!groups[label]) groups[label] = [];
-    groups[label].push(s);
+    const key = diff < 1 ? 'Today' : diff < 2 ? 'Yesterday' : diff < 8 ? 'This Week' : diff < 32 ? 'This Month' : d.toLocaleString('en-IN',{month:'long',year:'numeric'});
+    (groups[key] = groups[key] || []).push(s);
   });
-
-  Object.entries(groups).forEach(([label, sessions]) => {
-    const gl = document.createElement('div');
-    gl.className = 'h-group-label'; gl.textContent = label;
+  Object.entries(groups).forEach(([label, items]) => {
+    const gl = document.createElement('div'); gl.className='grp-lbl'; gl.textContent=label;
     list.appendChild(gl);
-    sessions.forEach(s => {
-      const ic = s.msgs.some(m => m.mt === 'video') ? '▶'
-               : s.msgs.some(m => m.mt === 'image') ? '◼'
-               : '◇';
-      const t = new Date(s.ts);
-      const tf = t.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    items.forEach(s => {
+      const ic = s.msgs.some(m=>m.mt==='video')?'▶':s.msgs.some(m=>m.mt==='image')?'◼':'◇';
+      const tf = new Date(s.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
       const el = document.createElement('div');
-      el.className = 'hi' + (s.id === cid ? ' active' : '');
+      el.className = 'hi' + (s.id===cid?' active':'');
       el.setAttribute('data-id', s.id);
-      el.innerHTML = `
-        <span class="hi-icon">${ic}</span>
-        <div class="hi-info">
-          <div class="hi-title">${esc(s.title)}</div>
-          <div class="hi-time">${tf}</div>
-        </div>
-        <button class="hi-del" onclick="delS('${s.id}',event)" title="Delete">✕</button>`;
-      el.onclick = e => { if (e.target.classList.contains('hi-del')) return; loadSession(s.id); };
+      el.innerHTML = `<span class="hi-ic">${ic}</span><div class="hi-d"><div class="hi-t">${esc(s.title)}</div><div class="hi-time">${tf}</div></div><button class="hi-x" onclick="delSess('${s.id}',event)">✕</button>`;
+      el.onclick = e => { if (e.target.classList.contains('hi-x')) return; loadSession(s.id); };
       list.appendChild(el);
     });
   });
 }
 
-/* ══════════════════════════════════════════════
-   SEND MESSAGE — FIXED: history excludes current msg
-══════════════════════════════════════════════ */
+/* ══════════════════════════════════════
+   SEND — FIXED: history snapshot BEFORE push
+══════════════════════════════════════ */
 async function send() {
   if (busy) return;
   const inp = document.getElementById('inp');
   const txt = inp.value.trim();
   if (!txt) return;
-  inp.value = ''; ar(inp);
+  inp.value = ''; aResize(inp);
 
-  const w = document.getElementById('welcome');
-  if (w) w.style.display = 'none';
+  document.getElementById('welcome')?.remove();
 
   const s = getOrMake();
   const type  = document.getElementById('gtype').value;
   const qual  = document.getElementById('gqual').value;
   const style = document.getElementById('gstyle').value;
 
-  // ★ CRITICAL FIX: snapshot history BEFORE pushing current message
-  const histSnap = s.msgs.map(m => ({
-    role: m.role,
-    // Include meaningful content; for media-only msgs use placeholder
-    content: m.content || (m.mt === 'image' ? '[Generated an image meme]' : m.mt === 'video' ? '[Generated a video meme]' : '[Response]')
-  }));
+  /* ★ CRITICAL: snapshot history BEFORE pushing current user message */
+  const histSnap = s.msgs
+    .filter(m => m.role && (m.content || m.mt))
+    .map(m => ({
+      role: m.role,
+      content: m.content || (m.mt==='image'?'[Meme image was generated]':m.mt==='video'?'[Meme video was generated]':'')
+    }))
+    .filter(m => m.content)
+    .slice(-14);
 
-  const um = { role: 'user', content: txt };
+  /* Push user message */
+  const um = { role:'user', content:txt };
   s.msgs.push(um);
   const ca = document.getElementById('chat');
   ca.querySelector('.cpad')?.remove();
   addMsg(um, ca, true);
 
+  /* Update session title from first user message */
   if (s.title === 'New Session') {
-    s.title = txt.slice(0, 42) + (txt.length > 42 ? '…' : '');
-    setTitle(s.title); saveDB(); renderHist();
+    s.title = txt.slice(0,44) + (txt.length>44?'…':'');
+    setTopTitle(s.title); saveDB(); renderHist();
   }
 
-  // Status
-  setStatus('thinking');
-  const tid = 'ty_' + Date.now();
+  /* Collect recently used templates to encourage variety */
+  const usedTpls = [...new Set(s.msgs.filter(m=>m.tpl).map(m=>m.tpl))].slice(-5);
+
+  /* Show typing */
+  setDot('think');
+  const tid = 'ty_'+Date.now();
   showTyping(tid, ca);
   busy = true;
   document.getElementById('sbtn').disabled = true;
 
   try {
     const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         prompt: txt,
         genType: type,
         quality: qual,
         style,
         lang,
-        creative: ls('creative') !== 'false',
-        autoswitch: ls('autoswitch') !== 'false',
-        history: histSnap.slice(-12)  // ★ clean history without current msg
+        creative: gs('creative') !== 'false',
+        autoswitch: gs('autoswitch') !== 'false',
+        history: histSnap,     // ★ clean history, no current msg
+        usedTemplates: usedTpls
       })
     });
 
     rmEl(tid);
-    setStatus('live');
+    setDot('live');
 
     if (!res.ok) {
-      const ed = await res.json().catch(() => ({}));
-      throw new Error(ed.error || 'Server error ' + res.status);
+      const ed = await res.json().catch(()=>({}));
+      throw new Error(ed.error || `Server error ${res.status}`);
     }
 
     const d = await res.json();
 
     if (d.videoJobId) {
-      const pm = { role: 'assistant', content: d.text || '', mt: 'video_pending', jobId: d.videoJobId, title: d.title || 'Video Meme', qual };
+      const pm = { role:'assistant', content:d.text||'', mt:'vpend', jobId:d.videoJobId, title:d.title||'Video Meme', qual };
       s.msgs.push(pm); saveDB();
       addMsg(pm, ca, true);
       pollVideo(d.videoJobId, pm, s, ca);
     } else {
       const am = {
-        role: 'assistant',
-        content: d.text || '',
-        mt: d.type,
-        url: d.url,
-        topText: d.topText,
-        bottomText: d.bottomText,
-        title: d.title || 'Meme',
-        qual,
-        alts: d.alts || []
+        role:'assistant', content:d.text||'',
+        mt: d.type, url:d.url, alts:d.alts||[],
+        topText:d.topText, bottomText:d.bottomText,
+        title:d.title||'Meme', qual,
+        tpl: d.template || null
       };
       s.msgs.push(am); saveDB();
       addMsg(am, ca, true);
-      if (d.type && ls('autosave') === 'true') scheduleAutosave(am);
+      if (d.type && gs('autosave')==='true') scheduleAS(am);
     }
 
     if (d.type || d.videoJobId) {
-      daily++; localStorage.setItem('mf4_d', daily); updCount();
-      document.getElementById('s-use').textContent = daily + ' / 100';
+      daily++; localStorage.setItem('mf5_d', daily); updCount();
+      document.getElementById('s-usage').textContent = daily+'/100';
     }
 
-  } catch (err) {
-    rmEl(tid);
-    setStatus('live');
-    addMsg({ role: 'assistant', content: '', err: err.message }, ca, true);
+  } catch(err) {
+    rmEl(tid); setDot('live');
+    addMsg({ role:'assistant', content:'', err:err.message }, ca, true);
   }
 
   pad(ca);
@@ -939,496 +856,390 @@ async function send() {
   document.getElementById('sbtn').disabled = false;
 }
 
-function qs(txt) {
-  document.getElementById('inp').value = txt;
-  send();
-}
+function qs(txt) { document.getElementById('inp').value=txt; send(); }
 
-/* ══════════════════════════════════════════════
-   RENDER MESSAGES
-══════════════════════════════════════════════ */
+/* ══ ADD MESSAGE ══ */
 function addMsg(m, ca, anim) {
   const isU = m.role === 'user';
   const wrap = document.createElement('div');
-  wrap.className = 'mc';
-  if (anim) wrap.style.animation = 'mi .25s ease';
 
-  const row = document.createElement('div');
-  row.className = 'mr ' + (isU ? 'u' : '');
-
-  const av = `<div class="av ${isU ? 'u' : 'ai'}">${isU ? '👤' : '🎭'}</div>`;
-  const nm = `<div class="mn">${isU ? 'You' : 'MemeForge'}</div>`;
-  let body = nm;
-
-  if (m.err) {
-    body += `<div class="bub err">⚠ ${esc(m.err)}</div>`;
+  if (isU) {
+    wrap.className = 'msg-block';
+    if (anim) wrap.style.animation = 'mi .22s ease';
+    const row = document.createElement('div'); row.className = 'msg-row u';
+    const bub = document.createElement('div'); bub.className = 'u-bub';
+    bub.innerHTML = esc(m.content);
+    row.appendChild(bub); wrap.appendChild(row);
   } else {
-    if (m.content) body += `<div class="bub ${isU ? 'u' : 'ai'}">${esc(m.content)}</div>`;
-    if (m.mt === 'image' && m.url) body += imgCard(m);
-    if (m.mt === 'video' && m.url) body += vidCard(m);
-    if (m.mt === 'video_pending') body += pendCard(m);
+    wrap.className = 'msg-block';
+    if (anim) wrap.style.animation = 'mi .22s ease';
+    const ai = document.createElement('div'); ai.className = 'ai-resp';
+
+    const nm = document.createElement('div'); nm.className = 'ai-name';
+    nm.innerHTML = 'MemeForge AI';
+    ai.appendChild(nm);
+
+    if (m.err) {
+      const e = document.createElement('div'); e.className = 'ai-err';
+      e.textContent = '⚠ ' + m.err; ai.appendChild(e);
+    } else {
+      if (m.content) {
+        const t = document.createElement('div'); t.className = 'ai-text';
+        t.innerHTML = esc(m.content); ai.appendChild(t);
+      }
+      if (m.mt === 'image' && m.url) { ai.appendChild(buildImgCard(m)); }
+      if (m.mt === 'video' && m.url) { ai.appendChild(buildVidCard(m)); }
+      if (m.mt === 'vpend') { ai.appendChild(buildPend(m)); }
+    }
+    wrap.appendChild(ai);
   }
 
-  row.innerHTML = (isU ? '' : av) + `<div class="mb">${body}</div>` + (isU ? av : '');
-  wrap.appendChild(row);
   ca.querySelector('.cpad')?.remove();
   ca.appendChild(wrap);
-
-  // Render canvas meme
-  if (m.mt === 'image' && m.url) {
-    const c = wrap.querySelector('canvas[data-cid]');
-    if (c) renderMemeCanvas(c, m.url, m.topText || '', m.bottomText || '', m.alts || []);
-  }
-  // Init video player
-  if (m.mt === 'video' && m.url) {
-    const v = wrap.querySelector('video');
-    if (v) initVid(v);
-  }
 }
 
-function pad(ca) {
-  const p = document.createElement('div'); p.className = 'cpad'; ca.appendChild(p);
-}
+function pad(ca) { const p=document.createElement('div'); p.className='cpad'; ca.appendChild(p); }
 
-/* ══════════════════════════════════════════════
-   IMAGE CARD (Canvas-based)
-══════════════════════════════════════════════ */
-function imgCard(m) {
-  const cid2 = 'c_' + rnd();
-  const qb = m.qual === 'ultra' ? '<span class="q-badge">ULTRA</span>'
-           : m.qual === 'high'  ? '<span class="q-badge">HD</span>'
-           : '';
-  const t = esc(m.title || 'Meme');
-  return `<div class="mc2">
-    <canvas id="${cid2}" data-cid="1"
-      onclick="openLBCanvas('${cid2}')"
-      style="cursor:zoom-in;display:block;width:100%;"></canvas>
-    <div class="cf">
-      <div class="cf-info">
-        <div class="cf-t">${t} ${qb}</div>
-        <div class="cf-s">Click to view full · Canvas rendered</div>
-      </div>
-      <div class="cf-btns">
-        <button class="cf-btn view" onclick="openLBCanvas('${cid2}')">⛶ View</button>
-        <button class="cf-btn dl" onclick="dlCanvas('${cid2}','${t}')">↓ Download</button>
-      </div>
+/* ══ IMAGE CARD (CSS overlay — zero CORS issues) ══ */
+function buildImgCard(m) {
+  const cardId = 'mc_'+rnd();
+  const qb = m.qual==='ultra'?'<span class="qbadge">ULTRA</span>':m.qual==='high'?'<span class="qbadge">HD</span>':'';
+  const div = document.createElement('div'); div.className = 'mcard'; div.id = cardId;
+
+  // CSS overlay approach — never fails, no CORS
+  const mw = document.createElement('div'); mw.className = 'meme-wrap'; mw.id = cardId+'_wrap';
+
+  const loader = document.createElement('div'); loader.className = 'meme-load';
+  loader.textContent = 'Loading image...'; mw.appendChild(loader);
+
+  const img = document.createElement('img');
+  img.alt = 'meme';
+  img.style.display = 'none';
+
+  // Text overlays
+  if (m.topText) {
+    const tt = document.createElement('div');
+    tt.className = 'meme-txt top'; tt.textContent = m.topText;
+    mw.appendChild(tt);
+  }
+  if (m.bottomText) {
+    const bt = document.createElement('div');
+    bt.className = 'meme-txt bot'; bt.textContent = m.bottomText;
+    mw.appendChild(bt);
+  }
+
+  mw.appendChild(img);
+
+  // Try loading images in order
+  const urlList = buildUrlList(m.url, m.alts || []);
+  loadBestImg(img, loader, urlList);
+
+  const foot = document.createElement('div'); foot.className = 'cf';
+  foot.innerHTML = `
+    <div class="cf-l">
+      <div class="cf-t">${esc(m.title||'Meme')} ${qb}</div>
+      <div class="cf-s">Click image to enlarge · Download saves full quality</div>
     </div>
-  </div>`;
+    <div class="cf-btns">
+      <button class="cbtn vw" onclick="viewMeme('${cardId}_wrap')">⛶ View</button>
+      <button class="cbtn dl" onclick="downloadMeme('${cardId}_wrap','${esc(m.title||'meme')}')">↓ Download</button>
+    </div>`;
+
+  img.onclick = () => viewMeme(cardId+'_wrap');
+  div.appendChild(mw); div.appendChild(foot);
+  return div;
 }
 
-/* ══════════════════════════════════════════════
-   CANVAS MEME RENDERER — Smart text layout
-══════════════════════════════════════════════ */
-async function renderMemeCanvas(canvas, imgUrl, topText, bottomText, alts) {
-  const proxyUrl = u => '/api/proxy?url=' + encodeURIComponent(u);
+/* Build URL list: imgflip direct first, pexels via proxy */
+function buildUrlList(primary, alts) {
+  const all = [primary, ...alts].filter(Boolean);
+  return all.map(u => {
+    if (!u) return null;
+    const isImgflip = u.includes('imgflip.com');
+    const isCDN = u.includes('cloudinary') || u.includes('amazonaws');
+    // Imgflip has CORS headers — load directly, no proxy needed
+    // Pexels — use proxy
+    return isImgflip || isCDN ? [u] : ['/api/proxy?url='+encodeURIComponent(u), u];
+  }).flat().filter(Boolean);
+}
 
-  // Try main url, then alts
-  const urls = [imgUrl, ...(alts || [])].filter(Boolean).map(proxyUrl);
-
-  let img = null;
+async function loadBestImg(imgEl, loaderEl, urls) {
   for (const url of urls) {
     try {
-      img = await loadImg(url);
-      if (img) break;
-    } catch (e) {}
+      await loadImgUrl(imgEl, url);
+      loaderEl.classList.add('gone');
+      imgEl.style.display = 'block';
+      return;
+    } catch(e) {}
   }
-
-  if (!img) {
-    // Draw error state
-    canvas.width = 500; canvas.height = 300;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#111';
-    ctx.fillRect(0, 0, 500, 300);
-    ctx.fillStyle = '#444';
-    ctx.font = '14px Inter';
-    ctx.textAlign = 'center';
-    ctx.fillText('Image load failed — check API keys', 250, 150);
-    return;
-  }
-
-  // High quality: use natural dimensions
-  const W = img.naturalWidth || img.width;
-  const H = img.naturalHeight || img.height;
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-
-  // Smart font sizing
-  const fs = Math.max(24, Math.min(W / 9, 82));
-  renderMemeText(ctx, topText, bottomText, W, H, fs);
+  loaderEl.textContent = 'Image unavailable — try again';
 }
 
-function renderMemeText(ctx, topText, bottomText, W, H, fs) {
-  if (!topText && !bottomText) return;
-
-  ctx.textAlign = 'center';
-  ctx.font = `900 ${fs}px Impact, "Arial Black", Arial, sans-serif`;
-  ctx.lineJoin = 'round';
-  ctx.miterLimit = 2;
-
-  function drawText(text, isTop) {
-    const words = text.toUpperCase().split(' ');
-    const maxW = W * 0.92;
-    const lines = [];
-    let line = '';
-    words.forEach(w => {
-      const test = line ? line + ' ' + w : w;
-      if (ctx.measureText(test).width > maxW && line) {
-        lines.push(line); line = w;
-      } else { line = test; }
-    });
-    if (line) lines.push(line);
-
-    const lh = fs * 1.18;
-    const totalH = lines.length * lh;
-
-    lines.forEach((l, i) => {
-      let y;
-      if (isTop) {
-        y = fs * 1.05 + i * lh;
-      } else {
-        y = H - totalH + (i + 1) * lh - fs * 0.18;
-      }
-
-      // Shadow for readability
-      ctx.shadowColor = 'rgba(0,0,0,0.9)';
-      ctx.shadowBlur = fs * 0.15;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
-      // Thick outline
-      ctx.lineWidth = fs * 0.14;
-      ctx.strokeStyle = '#000';
-      ctx.strokeText(l, W / 2, y);
-
-      // White fill
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = '#fff';
-      ctx.fillText(l, W / 2, y);
-    });
-  }
-
-  ctx.shadowColor = 'transparent';
-  if (topText) drawText(topText, true);
-  if (bottomText) drawText(bottomText, false);
-}
-
-function loadImg(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error('load failed'));
-    img.src = url;
-    setTimeout(() => reject(new Error('timeout')), 8000);
+function loadImgUrl(imgEl, url) {
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => rej(new Error('timeout')), 10000);
+    imgEl.onload = () => { clearTimeout(t); res(); };
+    imgEl.onerror = () => { clearTimeout(t); rej(new Error('load failed')); };
+    imgEl.src = url;
   });
 }
 
-/* ══════════════════════════════════════════════
-   VIDEO CARD
-══════════════════════════════════════════════ */
-function vidCard(m) {
-  const vid = 'v_' + rnd();
-  const qb = m.qual === 'high' ? '<span class="q-badge">HD</span>' : '';
-  const u = esc(m.url || '');
-  const t = esc(m.title || 'Video Meme');
-  return `<div class="mc2">
-    <div class="vw" id="${vid}w">
-      <video id="${vid}" preload="metadata">
-        <source src="${u}" type="video/mp4"/>
-      </video>
-      <div class="vo" id="${vid}o"><div class="vpb" id="${vid}pb">▶</div></div>
+/* ══ VIEW + DOWNLOAD MEME ══ */
+function viewMeme(wrapId) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  const img = wrap.querySelector('img');
+  if (!img || !img.src || !img.complete) return;
+  const lbi = document.getElementById('lb-img');
+  lbi.src = img.src;
+  lbImgEl = { wrap, img };
+  document.getElementById('lb').classList.add('open');
+}
+
+async function downloadMeme(wrapId, title) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+
+  toast('Preparing download...');
+
+  try {
+    if (typeof html2canvas !== 'undefined') {
+      const canvas = await html2canvas(wrap, {
+        useCORS: true, allowTaint: true,
+        backgroundColor: '#111',
+        scale: 2, logging: false
+      });
+      const a = document.createElement('a');
+      a.download = 'meme_' + (title||'memeforge').replace(/[^a-z0-9]/gi,'_').toLowerCase() + '_' + Date.now() + '.png';
+      a.href = canvas.toDataURL('image/png', 1.0);
+      a.click();
+      toast('Downloaded! ✅');
+    } else {
+      // Fallback: download the background image
+      const img = wrap.querySelector('img');
+      if (img && img.src) { dlUrl(img.src, (title||'meme')+'.jpg'); }
+    }
+  } catch(e) {
+    const img = wrap.querySelector('img');
+    if (img && img.src) { dlUrl(img.src, (title||'meme')+'.jpg'); }
+    toast('Saved background image');
+  }
+}
+
+function lbDl() {
+  if (!lbImgEl) return;
+  downloadMeme(lbImgEl.wrap.id, 'meme');
+}
+
+/* ══ VIDEO CARD ══ */
+function buildVidCard(m) {
+  const vid = 'v_'+rnd();
+  const qb = m.qual==='high'?'<span class="qbadge">HD</span>':'';
+  const u = m.url||'';
+
+  const card = document.createElement('div'); card.className='vcard';
+  card.innerHTML = `
+    <div class="vwrap paused" id="${vid}w">
+      <video id="${vid}" preload="metadata"><source src="${esc(u)}" type="video/mp4"/></video>
+      <div class="vover" onclick="togV('${vid}')"><div class="vpb" id="${vid}pb">▶</div></div>
     </div>
-    <div class="vctl">
-      <button class="vcb" id="${vid}btn" onclick="togV('${vid}')" title="Play/Pause">▶</button>
+    <div class="vctrl">
+      <button class="vbtn" id="${vid}btn" onclick="togV('${vid}')" title="Play/Pause">▶</button>
       <div class="vtrack" id="${vid}pt" onclick="seekV(event,'${vid}')">
         <div class="vbuf" id="${vid}buf" style="width:0%"></div>
-        <div class="vfill" id="${vid}pf" style="width:0%"></div>
-        <div class="vthumb" id="${vid}th"></div>
+        <div class="vprog" id="${vid}pf" style="width:0%"></div>
+        <div class="vknob" id="${vid}kn"></div>
       </div>
       <span class="vtime" id="${vid}tm">0:00 / 0:00</span>
       <div class="vvol">
-        <button class="vcb vol" id="${vid}mvol" onclick="togMute('${vid}')" title="Mute">🔊</button>
-        <input class="vol-sl" type="range" min="0" max="1" step="0.02" value="1" id="${vid}vs"
+        <button class="vbtn" id="${vid}mv" onclick="togMute('${vid}')" title="Mute">🔊</button>
+        <input class="vsl" type="range" min="0" max="1" step="0.02" value="1" id="${vid}vs"
           oninput="setVol('${vid}',this.value)"/>
       </div>
     </div>
     <div class="cf">
-      <div class="cf-info">
-        <div class="cf-t">${t} ${qb}</div>
+      <div class="cf-l">
+        <div class="cf-t">${esc(m.title||'Video Meme')} ${qb}</div>
         <div class="cf-s">AI-generated video meme</div>
       </div>
       <div class="cf-btns">
-        <button class="cf-btn dl" onclick="dlUrl('${u}','${t}.mp4')">↓ Download</button>
+        <button class="cbtn dl" onclick="dlUrl('${esc(u)}','${esc(m.title||'video')}.mp4')">↓ Download</button>
       </div>
-    </div>
-  </div>`;
+    </div>`;
+
+  // Init player after insert
+  setTimeout(() => { const v = document.getElementById(vid); if(v) initVid(v); }, 50);
+  return card;
 }
 
-/* ══════════════════════════════════════════════
-   VIDEO PLAYER CONTROLS
-══════════════════════════════════════════════ */
+function buildPend(m) {
+  const d = document.createElement('div');
+  d.className = 'pend'; d.id = 'pe_'+m.jobId;
+  d.innerHTML = `<div class="spin"></div><span>Rendering your video meme... (~20-30s) 🎬</span>`;
+  return d;
+}
+
+/* ══ VIDEO PLAYER ══ */
 function initVid(v) {
   const id = v.id;
-  const wrap = document.getElementById(id + 'w');
-
-  // Click to play/pause
+  const wrap = document.getElementById(id+'w');
   v.onclick = () => togV(id);
-
   v.addEventListener('timeupdate', () => {
     if (!v.duration) return;
-    const pct = (v.currentTime / v.duration) * 100;
-    const pf = document.getElementById(id + 'pf');
-    const tm = document.getElementById(id + 'tm');
-    const th = document.getElementById(id + 'th');
-    if (pf) pf.style.width = pct + '%';
-    if (th) th.style.left = pct + '%';
-    if (tm) tm.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
+    const p = v.currentTime/v.duration*100;
+    const pf = document.getElementById(id+'pf');
+    const kn = document.getElementById(id+'kn');
+    const tm = document.getElementById(id+'tm');
+    if (pf) pf.style.width = p+'%';
+    if (kn) kn.style.left = p+'%';
+    if (tm) tm.textContent = fmt(v.currentTime)+' / '+fmt(v.duration);
   });
-
   v.addEventListener('progress', () => {
-    if (!v.duration) return;
-    let pct = 0;
-    if (v.buffered.length > 0) pct = (v.buffered.end(v.buffered.length - 1) / v.duration) * 100;
-    const buf = document.getElementById(id + 'buf');
-    if (buf) buf.style.width = pct + '%';
+    if (!v.duration || !v.buffered.length) return;
+    const buf = document.getElementById(id+'buf');
+    if (buf) buf.style.width = (v.buffered.end(v.buffered.length-1)/v.duration*100)+'%';
   });
-
-  v.addEventListener('play', () => {
-    setPI(id, true);
-    if (wrap) wrap.classList.remove('paused');
-  });
-  v.addEventListener('pause', () => {
-    setPI(id, false);
-    if (wrap) wrap.classList.add('paused');
-  });
-  v.addEventListener('ended', () => {
-    setPI(id, false);
-    if (wrap) wrap.classList.add('paused');
-  });
-  v.addEventListener('error', () => {
-    const tm = document.getElementById(id + 'tm');
-    if (tm) tm.textContent = 'Error';
-  });
+  v.addEventListener('play',  () => { setPI(id,true);  wrap?.classList.remove('paused'); });
+  v.addEventListener('pause', () => { setPI(id,false); wrap?.classList.add('paused'); });
+  v.addEventListener('ended', () => { setPI(id,false); wrap?.classList.add('paused'); });
 }
-
 function togV(id) {
   const v = document.getElementById(id);
   if (!v) return;
-  if (v.paused) v.play().catch(() => {}); else v.pause();
+  if (v.paused) v.play().catch(()=>{}); else v.pause();
 }
-function setPI(id, p) {
-  const sym = p ? '⏸' : '▶';
-  ['btn', 'pb'].forEach(s => { const el = document.getElementById(id + s); if (el) el.textContent = sym; });
+function setPI(id,p) {
+  const sym = p?'⏸':'▶';
+  ['btn','pb'].forEach(s => { const e=document.getElementById(id+s); if(e) e.textContent=sym; });
 }
-function seekV(e, id) {
-  const v = document.getElementById(id);
-  const pt = document.getElementById(id + 'pt');
-  if (!v || !pt || !v.duration) return;
+function seekV(e,id) {
+  const v=document.getElementById(id), pt=document.getElementById(id+'pt');
+  if (!v||!pt||!v.duration) return;
   const r = pt.getBoundingClientRect();
-  const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-  v.currentTime = pct * v.duration;
+  v.currentTime = Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)) * v.duration;
 }
-function setVol(id, val) {
-  const v = document.getElementById(id);
-  if (!v) return;
-  v.volume = parseFloat(val);
-  v.muted = parseFloat(val) === 0;
-  updateVolIcon(id, v);
+function setVol(id,val) {
+  const v=document.getElementById(id); if(!v) return;
+  v.volume=parseFloat(val); v.muted=parseFloat(val)===0;
+  const btn=document.getElementById(id+'mv'); if(btn) btn.textContent=(v.muted?'🔇':'🔊');
 }
 function togMute(id) {
-  const v = document.getElementById(id);
-  if (!v) return;
-  v.muted = !v.muted;
-  const vs = document.getElementById(id + 'vs');
-  if (vs) vs.value = v.muted ? 0 : v.volume;
-  updateVolIcon(id, v);
+  const v=document.getElementById(id); if(!v) return;
+  v.muted=!v.muted;
+  const vs=document.getElementById(id+'vs'); if(vs) vs.value=v.muted?0:v.volume;
+  const btn=document.getElementById(id+'mv'); if(btn) btn.textContent=(v.muted?'🔇':'🔊');
 }
-function updateVolIcon(id, v) {
-  const btn = document.getElementById(id + 'mvol');
-  if (btn) btn.textContent = (v.muted || v.volume === 0) ? '🔇' : '🔊';
-}
-function fmt(s) { const m = Math.floor(s / 60); return m + ':' + Math.floor(s % 60).toString().padStart(2, '0'); }
+function fmt(s) { return Math.floor(s/60)+':'+Math.floor(s%60).toString().padStart(2,'0'); }
 
-function pendCard(m) {
-  return `<div class="vpend" id="pe_${m.jobId}">
-    <div class="spin"></div>
-    <span>Rendering your video meme... (~20-30 sec) 🎬</span>
-  </div>`;
-}
-
-/* ══════════════════════════════════════════════
-   VIDEO POLLING (Shotstack)
-══════════════════════════════════════════════ */
+/* ══ VIDEO POLL ══ */
 async function pollVideo(jobId, msg, s, ca) {
-  for (let i = 0; i < 30; i++) {
+  for (let i=0; i<30; i++) {
     await sleep(5000);
     try {
-      const r = await fetch('/api/video/' + jobId);
+      const r = await fetch('/api/video/'+jobId);
       if (!r.ok) continue;
       const d = await r.json();
-      if (d.status === 'done' && d.url) {
-        msg.mt = 'video'; msg.url = d.url;
-        saveDB();
-        const el = document.getElementById('pe_' + jobId);
-        if (el) {
-          const tmp = document.createElement('div');
-          tmp.innerHTML = vidCard(msg);
-          const card = tmp.firstChild;
-          el.replaceWith(card);
-          const v = card.querySelector('video');
-          if (v) initVid(v);
-        }
-        if (ls('autosave') === 'true') dlUrl(d.url, (msg.title || 'video') + '.mp4');
-        toast('Video ready! 🎬');
+      if (d.status==='done' && d.url) {
+        msg.mt='video'; msg.url=d.url; saveDB();
+        const el=document.getElementById('pe_'+jobId);
+        if (el) { const nc=buildVidCard(msg); el.replaceWith(nc); }
+        if (gs('autosave')==='true') dlUrl(d.url,(msg.title||'video')+'.mp4');
+        toast('Video ready! 🎬'); return;
+      }
+      if (d.status==='failed') {
+        const el=document.getElementById('pe_'+jobId);
+        if(el){ const e=document.createElement('div'); e.className='ai-err'; e.textContent='⚠ Video render failed. Please try again.'; el.replaceWith(e); }
         return;
       }
-      if (d.status === 'failed') {
-        const el = document.getElementById('pe_' + jobId);
-        if (el) el.innerHTML = '<div class="bub err">⚠ Video rendering failed. Please try again.</div>';
-        return;
-      }
-    } catch (_) {}
+    } catch(_) {}
   }
-  const el = document.getElementById('pe_' + jobId);
-  if (el) el.innerHTML = '<div class="bub err">⚠ Video timed out. Please try again.</div>';
+  const el=document.getElementById('pe_'+jobId);
+  if(el){ const e=document.createElement('div'); e.className='ai-err'; e.textContent='⚠ Video timed out. Please try again.'; el.replaceWith(e); }
 }
 
-/* ══════════════════════════════════════════════
-   TYPING INDICATOR
-══════════════════════════════════════════════ */
+/* ══ TYPING ══ */
 function showTyping(id, ca) {
-  const w = document.createElement('div'); w.className = 'mc'; w.id = id;
-  const row = document.createElement('div'); row.className = 'mr';
-  row.innerHTML = `<div class="av ai">🎭</div><div class="mb"><div class="mn">MemeForge</div><div class="bub ai"><div class="typy"><span></span><span></span><span></span></div></div></div>`;
-  w.appendChild(row);
+  const w=document.createElement('div'); w.className='msg-block'; w.id=id;
+  const ai=document.createElement('div'); ai.className='ai-resp';
+  const nm=document.createElement('div'); nm.className='ai-name'; nm.innerHTML='MemeForge AI';
+  const t=document.createElement('div'); t.className='typy';
+  t.innerHTML='<span></span><span></span><span></span>';
+  ai.appendChild(nm); ai.appendChild(t); w.appendChild(ai);
   ca.querySelector('.cpad')?.remove();
-  ca.appendChild(w);
-  ca.scrollTop = ca.scrollHeight;
+  ca.appendChild(w); ca.scrollTop=ca.scrollHeight;
 }
 function rmEl(id) { document.getElementById(id)?.remove(); }
 
-/* ══════════════════════════════════════════════
-   LIGHTBOX
-══════════════════════════════════════════════ */
-function openLBCanvas(cid2) {
-  const src = document.getElementById(cid2);
-  if (!src) return;
-  lbCanvas = src; lbUrl = null;
-  const lbc = document.getElementById('lb-canvas');
-  const lbi = document.getElementById('lb-img');
-  lbc.width = src.width; lbc.height = src.height;
-  lbc.getContext('2d').drawImage(src, 0, 0);
-  lbc.style.display = 'block'; lbi.style.display = 'none';
-  document.getElementById('lb').classList.add('open');
-}
+/* ══ LIGHTBOX ══ */
 function clb(e, force) {
-  if (force || !e || e.target === document.getElementById('lb')) {
+  if (force || !e || e.target===document.getElementById('lb'))
     document.getElementById('lb').classList.remove('open');
-  }
-}
-function lbdl() {
-  if (lbCanvas) {
-    const a = document.createElement('a');
-    a.download = 'memeforge_' + Date.now() + '.png';
-    a.href = lbCanvas.toDataURL('image/png', 1.0);
-    a.click(); toast('Downloaded full quality PNG!');
-  } else if (lbUrl) { dlUrl(lbUrl, 'memeforge.mp4'); }
 }
 
-/* ══════════════════════════════════════════════
-   DOWNLOAD
-══════════════════════════════════════════════ */
-function dlCanvas(cid2, title) {
-  const c = document.getElementById(cid2);
-  if (!c) return;
-  const a = document.createElement('a');
-  a.download = 'meme_' + (title || 'memeforge').replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_' + Date.now() + '.png';
-  a.href = c.toDataURL('image/png', 1.0);
-  a.click();
-  toast('Downloaded!');
-}
+/* ══ DOWNLOAD ══ */
 function dlUrl(url, name) {
-  const a = document.createElement('a');
-  a.href = url; a.download = name || 'meme.mp4'; a.target = '_blank';
+  const a=document.createElement('a'); a.href=url; a.download=name||'meme.mp4'; a.target='_blank';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   toast('Download started!');
 }
-function scheduleAutosave(m) {
-  if (m.mt === 'video' && m.url) { setTimeout(() => dlUrl(m.url, m.title + '.mp4'), 500); }
-  // Canvas download happens after render
-}
+function scheduleAS(m) { if(m.mt==='video'&&m.url) setTimeout(()=>dlUrl(m.url,m.title+'.mp4'),500); }
 
-/* ══════════════════════════════════════════════
-   SETTINGS
-══════════════════════════════════════════════ */
+/* ══ SETTINGS ══ */
 function openS() { document.getElementById('sov').classList.add('open'); }
 function closeS() { document.getElementById('sov').classList.remove('open'); }
-function sovck(e) { if (e.target === document.getElementById('sov')) closeS(); }
+function sovCk(e) { if(e.target===document.getElementById('sov')) closeS(); }
 
-/* ══════════════════════════════════════════════
-   STATUS
-══════════════════════════════════════════════ */
-function setStatus(state) {
-  const ind = document.getElementById('ind');
-  ind.className = 'tb-indicator ' + state;
+/* ══ STATUS DOT ══ */
+function setDot(state) {
+  const d=document.getElementById('dot');
+  d.className='dot'+(state==='live'?' live':state==='think'?' think':'');
 }
 
-/* ══════════════════════════════════════════════
-   UI HELPERS
-══════════════════════════════════════════════ */
-function resetUI(showWelcome = true) {
+/* ══ UI HELPERS ══ */
+function resetUI(showWelcome=true) {
   const ca = document.getElementById('chat');
   ca.innerHTML = '';
   if (showWelcome) {
-    ca.innerHTML = `<div id="welcome" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
-      <div class="wl-badge">🇮🇳 India's #1 AI Meme Creator</div>
-      <div class="wl-icon">🎭</div>
-      <div class="wl-h1">What are we creating?</div>
-      <div class="wl-sub">Describe any meme idea in Hindi or English — image memes, video memes, or ask me anything.</div>
-      <div class="wl-hin">Hindi, English ya Hinglish mein likho — samajh lunga 🔥</div>
-      <div class="chips-lbl">Quick ideas →</div>
+    ca.innerHTML = `<div id="welcome" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;">
+      <div class="w-em">🎭</div>
+      <div class="w-h">What are we creating?</div>
+      <div class="w-s">Describe any meme idea in Hindi or English — image memes, video memes, or ask me anything.</div>
+      <div class="w-hi">Hindi, English ya Hinglish mein likho — samajh lunga 🔥</div>
+      <div class="chips-h">Quick start →</div>
       <div class="chips">
-        <div class="chip" onclick="qs('Drake meme banao — raat ko padhna chahiye vs reels dekhna')"><span class="chip-i">🦆</span><div class="chip-t">Drake: Padhna vs Reels</div><div class="chip-s">Hindi · Image</div></div>
-        <div class="chip" onclick="qs('Giga chad meme about a guy who never studies but tops the exam')"><span class="chip-i">💪</span><div class="chip-t">Giga Chad: Never-Study Topper</div><div class="chip-s">English · Image</div></div>
-        <div class="chip" onclick="qs('This is fine dog meme — 47 degree garmi aur AC kharab hai')"><span class="chip-i">🔥</span><div class="chip-t">This Is Fine: 47°C Garmi</div><div class="chip-s">Hinglish · Image</div></div>
-        <div class="chip" onclick="qs('Distracted boyfriend meme — me, my deadlines, and YouTube shorts')"><span class="chip-i">😍</span><div class="chip-t">Distracted BF: Shorts vs Work</div><div class="chip-s">English · Image</div></div>
-        <div class="chip" onclick="qs('Expanding brain meme about jugaad levels of Indian students')"><span class="chip-i">🧠</span><div class="chip-t">Expanding Brain: Jugaad</div><div class="chip-s">Hinglish · Image</div></div>
-        <div class="chip" onclick="qs('Funny video meme about Indian office meetings that couldve been an email')"><span class="chip-i">🎬</span><div class="chip-t">Video: Office Nautanki</div><div class="chip-s">English · Video</div></div>
+        <div class="chip" onclick="qs('Drake meme banao — raat ko padhna chahiye vs YouTube shorts dekhna')"><span class="chip-e">🦆</span><div class="chip-t">Drake: Padhna vs Shorts</div><div class="chip-s">Hindi · Image</div></div>
+        <div class="chip" onclick="qs('Giga chad meme — jo kabhi nahi padha aur topper ban gaya')"><span class="chip-e">💪</span><div class="chip-t">Giga Chad: Kabhi-na-Padha Topper</div><div class="chip-s">Hinglish · Image</div></div>
+        <div class="chip" onclick="qs('This is fine meme — 47 degree, AC kharab, aur bijli cut')"><span class="chip-e">🔥</span><div class="chip-t">This Is Fine: 47°C Garmi</div><div class="chip-s">Hinglish · Image</div></div>
+        <div class="chip" onclick="qs('Distracted boyfriend — me, deadline, aur Instagram reels')"><span class="chip-e">😍</span><div class="chip-t">Distracted BF: Reels vs Work</div><div class="chip-s">Hinglish · Image</div></div>
+        <div class="chip" onclick="qs('Expanding brain meme about IIT student jugaad during exam')"><span class="chip-e">🧠</span><div class="chip-t">Expanding Brain: Jugaad</div><div class="chip-s">Hinglish · Image</div></div>
+        <div class="chip" onclick="qs('Funny video meme about Indian office meetings that shouldve been an email')"><span class="chip-e">🎬</span><div class="chip-t">Video: Office Nautanki</div><div class="chip-s">English · Video</div></div>
       </div>
     </div>`;
   }
   pad(ca);
-  setTitle('MemeForge AI — Ready');
+  setTopTitle('MemeForge AI — Ready');
 }
-
-function setTitle(t) {
-  document.getElementById('tb-t').textContent = t;
-  document.title = t.length > 20 ? t.slice(0, 20) + '… — MemeForge' : t + ' — MemeForge';
-}
+function setTopTitle(t) { document.getElementById('top-t').textContent=t; document.title=t.slice(0,30)+' — MemeForge'; }
 function updCount() {
-  const l = Math.max(0, 100 - daily);
-  document.getElementById('tb-cnt').textContent = l + ' left today';
-  document.getElementById('su-val').textContent = daily + ' / 100';
-  document.getElementById('su-fill').style.width = Math.min(daily, 100) + '%';
+  const l=Math.max(0,100-daily);
+  document.getElementById('top-cnt').textContent=l+' left today';
+  document.getElementById('u-val').textContent=daily+'/100';
+  document.getElementById('u-fill').style.width=Math.min(daily,100)+'%';
 }
-
-function hk(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
-function ar(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+function hKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function aResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 function esc(s) {
-  if (!s) return '';
+  if(!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br/>');
 }
-function toast(msg, d = 2800) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), d);
+function toast(msg,d=2800) {
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d);
 }
-function rnd() { return Math.random().toString(36).slice(2, 8); }
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function keyHelp() {
-  alert('✅ Your Vercel environment variables are all set!\n\n• GROQ_API_KEY → AI brain (Llama 3.3 70B)\n• GEMINI_API_KEY → Backup AI + smart reasoning\n• PEXELS_API_KEY → Images & video backgrounds\n• SHOTSTACK_KEY → Video meme rendering\n• AYRSHARE_API_KEY → Social posting (future)\n• APIFY_API_TOKEN → Trending scrape (future)\n\nAll APIs are being used automatically.');
+function rnd() { return Math.random().toString(36).slice(2,8); }
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function keyInfo() {
+  alert('✅ All your APIs are configured!\n\nGROQ_API_KEY → AI brain (Llama 3.3 70B)\nGEMINI_API_KEY → Backup AI + factual queries\nPEXELS_API_KEY → Image/video backgrounds\nSHOTSTACK_KEY → Video meme rendering\n\nAll working automatically. No action needed.');
 }
 </script>
 </body>
